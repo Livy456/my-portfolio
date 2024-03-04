@@ -1,10 +1,10 @@
 // Automatic Navigation Menu
 let pages = [
-    {url: "", title: "Home"},
-    {url: "projects/", title: "Projects"},
-    {url: "contact/", title: "Contact"},
+    {url: "./", title: "Home"},
+    {url: "projects", title: "Projects"},
+    {url: "contact", title: "Contact"},
     {url: "https://livy456.github.io/portfolio/", title: "Portfolio"},
-    {url: "resume/", title: "Resume"},
+    {url: "resume", title: "Resume"},
 ];
 const ARE_WE_HOME = document.documentElement.classList.contains("home");
 
@@ -20,10 +20,11 @@ for (let p of pages)
     // create link and add it to nav menu
     let a = document.createElement("a");
     
-    if (!ARE_WE_HOME && !url.startsWith("http"))
-    {
-        url = "../" + url
-    }
+    // not needed when using svelte
+    // if (!ARE_WE_HOME && !url.startsWith("http"))
+    // {
+    //     url = "../" + url
+    // }
 
     a.href = url;
     a.textContent = title;
