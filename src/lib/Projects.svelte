@@ -5,6 +5,22 @@
     export let hLevel = 2;
 </script>
 
+<!-- <style>
+    .projects{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(20em, 1fr));
+    }
+
+    article{
+        display: grid;
+        grid-template-rows: subgrid;
+        grid-row: span 3;
+        padding-right: 5px;
+        padding-left: 5px;
+    }
+
+</style> -->
+
 <article>
     <!-- {#if hLevel === 1}
         <h1>{p.title}</h1>
@@ -24,8 +40,6 @@
     {:else if hLevel === 6}
         <h6>{p.title}</h6>
     {/if} -->
-
-
     <svelte:element this={"h" + hLevel} > {p.title}</svelte:element>
 
     <!-- <img src={p.image} /> -->

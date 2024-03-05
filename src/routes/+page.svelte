@@ -26,7 +26,6 @@
 <h2>Latest Projects</h2>
 <div class="projects">
     {#each projects.slice(0, 3) as p}
-        <Project info={p} hLevel=1/>
-            
+        <Project info={p} hLevel=3/>
     {/each}
 </div>
