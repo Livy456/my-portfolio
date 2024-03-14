@@ -1,9 +1,6 @@
 <script>
     import Navbar from "../lib/Navbar.svelte";
 
-    // let root = document.documentElement;
-    // let colorScheme = localStorage.colorScheme ?? "light dark";
-    // root.style.setProperty("color-scheme", colorScheme);
     let localStorage = globalThis.localStorage ?? {};
     let colorScheme = "light dark";
     $: localStorage.colorScheme = colorScheme;
