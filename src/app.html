@@ -8,6 +8,12 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>Olivia Dias Portfolio</title>
 		%sveltekit.head%
+		<script>
+			let root = document.documentElement;
+			let colorScheme = localStorage.colorScheme ?? "light dark";
+
+			root.style.setProperty("color-scheme", colorScheme);
+		</script>
 	</head>
 
 	<body data-sveltekit-preload-data="hover">
