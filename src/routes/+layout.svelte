@@ -29,7 +29,6 @@ label.color-scheme{
 </style>
 <Navbar></Navbar>
 
-<!-- <p>{colorScheme}</p> -->
 <label class="color-scheme">
     Theme:
     <select bind:value={ colorScheme }>
