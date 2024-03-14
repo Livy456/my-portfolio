@@ -15,7 +15,7 @@
     let root = globalThis?.document?.documentElement;
     $: root?.style.setProperty("color-scheme", colorScheme);
 
-    let profileDate = fetch("https://api.github.com/users/livy456");
+    // let profileDate = fetch("https://api.github.com/users/livy456");
 
 </script>
 <style> 
