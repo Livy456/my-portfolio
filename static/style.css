@@ -40,6 +40,21 @@ article{
     padding-left: 0.5rem;
     font-family: inherit;
 } */
+dl{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+dt{
+    grid-row: 1;
+    /* color: rgb(255, 106, 0); */
+    font-size: 20px;
+}
+
+dd{
+    grid-row: 2;
+    font-size: 50px;
+}
 
 nav{
     display: flex;
@@ -103,6 +118,7 @@ a{
     border-bottom-width: 2px;
     border-bottom-style: solid;
     border-bottom-color: rgb(151, 137, 137);
+    font-size: 20px;
 }
 
 img{
