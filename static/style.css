@@ -114,7 +114,6 @@ a{
     border-bottom-style: solid;
     border-bottom-color: rgb(151, 137, 137);
     font-size: 20px;
-    color:
 }
 
 img{
@@ -130,13 +129,13 @@ form{
     grid-template-columns: auto 1fr;
     gap: 1em;
 }
-
+/* 
 li{
     margin-bottom: 4px;
     padding: 10px;
     background-color: bisque;
     color: black;
-}
+} */
 
 time{
     font-style: oblique;

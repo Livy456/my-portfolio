@@ -30,7 +30,7 @@
         <p>Decoding...</p>
         
     {:then data} 
-        <section>
+        <section class="github stats">
             <!-- <p>The data is { JSON.stringify(data) }</p> -->
             <h2>My GitHub Stats</h2>
             <dl>
