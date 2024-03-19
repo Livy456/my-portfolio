@@ -46,6 +46,10 @@ dd{
     font-size: 50px;
 }
 
+time{
+    font-family: Baskerville;
+}
+
 nav{
     display: flex;
     padding-left: 0.5%;
