@@ -19,6 +19,20 @@ let pieData = rolledData.map( ([year, count]) => {
     return {value: count, label: year};
 });
 
+
+// ERROR WITH THE CSS FOR THE LEGEND
+// ERROR WITH THE SEARCH BAR FEATURE OF THE WEBSITE
+
+let query = "";
+let filterProjects;
+$:filterProjects = projects.filter( (project) => {
+        if (query){
+            return project.title.includes(query);
+        }
+
+        return true;
+    });
+
 </script>
 
 <h1>{projects.length} Projects</h1>
@@ -26,8 +40,16 @@ let pieData = rolledData.map( ([year, count]) => {
 <!-- <pre>{JSON.stringify(projects, null, "\t") }</pre> -->
 <Pie data={pieData}/>   
 
+    <input 
+        class="search-bar"
+        type="search"
+        bind:value="{query}"
+        aria-label="Search Projects"
+        placeholder="🔍 Search projects…"
+    />
+
     <div class="projects">
-        {#each projects as p}
+        {#each filterProjects as p}
             <Project info={p}/>
         {/each}
     </div>

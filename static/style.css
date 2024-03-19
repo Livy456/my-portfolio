@@ -74,11 +74,11 @@ h2{
     background-color: rgb(236, 164, 70);    
 }
 
-.resume li{
+/* li.resume{
     display: grid;
     grid-template-rows: auto 1fr;
     row-gap: 1em;
-}
+} */
 
 section{
     display: grid;

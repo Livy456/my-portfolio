@@ -8,7 +8,7 @@
     let arcData = sliceGenerator(data);
 
     let arcGenerator = d3.arc().innerRadius(0).outerRadius(50);
-    let arcs = arcData.map(d => arcGenerator(d))
+    let arcs = arcData.map(d => arcGenerator(d));
     
 </script>
 
@@ -28,6 +28,7 @@
     }
 
     span.swatch{
+        display: inline-block;
         aspect-ratio: 1 / 1;
         background-color: aquamarine;
         border-radius: 50%;
@@ -67,6 +68,7 @@
 
     li{
         font-palette: black;
+        /* color: aquamarine; */
     }
 </style>
 
