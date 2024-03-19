@@ -1,6 +1,7 @@
 <script>
     export let info ={};
-    let p = info;
+    let p;
+    $: p = info; // makes p variable reactive
     
     export let hLevel = 2;
 </script>
