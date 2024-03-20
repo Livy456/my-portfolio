@@ -2,7 +2,7 @@
     {
         "title": "Data Activism",
         "year": 2022, 
-        "image": "../src/lib/images/DataActivismChart.png",
+        "image": "../src/lib/images/ProjectImg_Corp_Own_Analysis.png",
         "description": "I curated a curriculum that integrated social justice and data science to encourage minoritized high school students to pursue a career in STEM."
     },
     {
@@ -14,7 +14,7 @@
     {
         "title": "RL Computational Tool",
         "year": 2023, 
-        "image": "../src/lib/images/RAICA_Website.png",
+        "image": "../src/lib/images/ProjectImg_Corp_Own_Analysis.png",
         "description": "I made a website that hosts a self-driving game. I made this computational tool as a part of a research opportunity program to enable middle school and high school students learn about reinforcement learning concepts."
     },
     
