@@ -9,8 +9,10 @@ import Pie from '$lib/Pie.svelte';
 import * as d3 from 'd3';
 
 let selectedYearIndex = -1;
+let selectedYear;
 let query = "";
 let filterProjects;
+let filteredYear;
 
 $: filterProjects = projects.filter( (project) => {
     
@@ -36,13 +38,20 @@ $:{
     });
 }
 
+// filter function iterates through each element in array
+$: filteredYear = filterProjects.filter( (project) => {
+    
+    selectedYear =  selectedYearIndex > -1 ? pieData[selectedYearIndex].label : null;
+    return project.year === selectedYear; 
+});
+
 </script>
 
 <style>
 input.search-bar{
-    background-color: rgb(255, 255, 255);
+    /* background-color: rgb(255, 255, 255); */
     font-size: 30px;
-    width: 700px;
+    width: 1240px;
     height: 50px;
 }
 
@@ -53,6 +62,7 @@ input.search-bar{
 <!-- <pre>{JSON.stringify(projects, null, "\t") }</pre> -->
 <Pie data={pieData} bind:selectedIndex="{selectedYearIndex}"/>   
 
+    <!-- {selectedYearIndex} -->
     <input 
         class="search-bar"
         type="search"
@@ -62,7 +72,16 @@ input.search-bar{
     />
 
     <div class="projects">
-        {#each filterProjects as p}
+
+        {#if filteredYear}
+            {#each filteredYear as p}
             <Project info={p}/>
-        {/each}
+            {/each}
+        {/if}
+
+        {#if filteredYear.length === 0}
+            {#each filterProjects as p}
+                <Project info={p}/>
+            {/each}
+        {/if}
     </div>

@@ -14,6 +14,9 @@
         </section>
         <section class="Relevant_Experience">
             <h3>RELEVANT EXPEREINCE</h3>
+            <p><strong>Procter & Gamble (P&G)</strong>, <em>Market Analysis and Insight</em>, Cincinnati, OH <br><time>Summer 2024</time></p>
+            <li>Incoming Market Analysis and Insight intern summer 2024</li>
+
             <p><strong>MIT STEP Lab</strong>, <em>Undergraduate Researcher</em>, Cambridge, MA <br><time>06.2023 - present</time></p>
             <li>Building a website that will serve as a computational tool that teaches Reinforcement Learning to students via a self-driving car game; Creating agile user stories to explain the software features of the computational tool</li>
             

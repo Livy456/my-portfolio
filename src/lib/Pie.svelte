@@ -12,6 +12,19 @@
     let arcGenerator = d3.arc().innerRadius(0).outerRadius(50);
     let arcs;
     $: arcs = arcData.map(d => arcGenerator(d));
+
+    function toggleWedge(index, event){
+        if(selectedIndex === index)
+        {
+            selectedIndex = -1;
+            console.log("they are equal!!");
+        }
+        
+        else if(!event.key || event.key === "Enter")
+        {
+            selectedIndex = index;
+        }
+    }
     
 </script>
 
@@ -22,25 +35,35 @@
         margin-block: 2em;
         /* Doesn't clip the shape even if it'd outside of viewbox */
         overflow: visible;
+
     }
 
-    svg:has(path:hover)
+    svg:has(path:hover, path:focus-visible)
     {
-        path:not(:hover){
+        path:not(:hover, :focus-visible){
             opacity: 50%;
         }
     }
 
     path{
         transition: 300ms;
+        outline: none;
         cursor: pointer;
+        --angle: calc(var(--end-angle) - var(--start-angle));
+        --mid-angle: calc(var(--start-angle) + var(--angle) / 2);
+        transform: rotate(var(--mid-angle)) translateY(0) rotate(calc(-1 * var(--mid-angle)));
+
+        &.selected{
+            transform: rotate(var(--mid-angle)) translateY(-6px) scale(1.1)
+            rotate(calc(-1 * var(--mid-angle)));
+        }
     }
 
     .container{
         align-items: center;
         flex: 1;
         display: flex;
-        gap: 10ch;
+        gap: 60ch;
     }
 
     span.swatch{
@@ -81,18 +104,27 @@
 
 <div class="container">
 
-    <!-- NEED HELP ON THE CSS FOR THE LEGEND FOR THE PIE CHART -->
-    <svg viewBox= "-50 -50 100 100">
+    <svg viewBox= "-190 -55 100 100">
         {#each arcs as arc, i}
-            <path d={arc} fill= {fillColors(i)} 
-            class:selected={selectedIndex === i} on:click={e => 
-            selectedIndex = selectedIndex === i ? -1: i} />
+            <path d={arc} 
+            style="
+            --start-angle: { arcData[i]?.startAngle }rad;
+            --end-angle: { arcData[i]?.endAngle }rad;"
+            
+            fill= {fillColors(i)} 
+            tabindex="0"
+            aria-label="Pie Chart"
+            role= "button"
+            class:selected={selectedIndex === i} 
+            on:click={e => toggleWedge(i, e)} 
+            on:keyup={e => toggleWedge(i, e)}/>
+            <!-- selectedIndex = selectedIndex === i ? -1: i} /> -->
         {/each}  
     </svg>
     <ul class="legend">
         {#each data as d, index}
             <li style="--color: { fillColors(index) }">
-                <span class="swatch"></span>
+                <span class="swatch" class:selected={selectedIndex === index}></span>
                 {d.label} <em> ({d.value})</em>
             
             </li>
