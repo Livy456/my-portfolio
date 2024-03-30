@@ -4,9 +4,11 @@
     let pages = [
         {url: "./", title:"Home"},
         {url: "./projects", title:"Projects"},
-        {url: "./contact", title:"Contact"},
-        {url: "https://livy456.github.io/my-portfolio/", title:"Portfolio"},
-        {url: "./resume", title:"Resume"}
+        {url: "./resume", title:"Resume"},
+        {url: "https://github.com/Livy456", title:"Portfolio"},
+        {url:"./meta", title:"Meta"},
+        {url: "./contact", title:"Contact"}
+        
     ]
 
     

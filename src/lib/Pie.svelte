@@ -35,6 +35,7 @@
         margin-block: 2em;
         /* Doesn't clip the shape even if it'd outside of viewbox */
         overflow: visible;
+        padding-bottom:25px;
 
     }
 
