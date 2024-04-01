@@ -4,7 +4,10 @@
 
     let data = [];
     let commits = [];
-
+    let width = 1000, height = 600;
+    const yScale;
+    const xScale;
+    
     onMount(async() => {
         data = await d3.csv("loc.csv", row=> ({
             ...row,
@@ -37,12 +40,22 @@
 
         });
 
+        yScale = d3.scaleLinear([0, height], [0, 24]); // might need to switch values currently domain = [0, height], range = [0, 24] 
+        xScale = d3.scaleTime(domain(commits.datetime).nice(), d3.extent(commits.datetime))
+        // .domain(commits.datetime).nice();
+        // MAKING XSCALE MIGHT BE CAUSE OF FUTURE ERRORS
+        // d3.scaleTime(data.datetime, d3.extent(data.datetime));
+
     });
 
     $: fileLengths = d3.rollups(data, v => d3.max(v, v => v.line), d => d.file);
     $: avgFileLength = d3.mean(fileLengths, f => f[1]);
     $: workByPeriod = d3.rollups(data, v=> v.length, d => d.datetime.toLocaleString("en", {dayPeriod: "short"}) );
     $: maxPeriod = d3.greatest(workByPeriod, (d) => d[1])?.[0];
+    
+    
+
+    // console.log("this is commits:", commits);
 
 </script>
 
@@ -79,11 +92,12 @@
         grid-template-rows: auto;
         font-family: 'Segoe UI';
     }
+
+    svg{
+        overflow: visible;
+    }
     
 </style>
-
-<!-- <p>Total lines of code: {data.length}</p> -->
-<!-- <p>{JSON.stringify(commits, null, "\t")}</p> -->
 <h2 class="meta">Summary</h2>
 
 <dl class="stats">
@@ -108,6 +122,22 @@
     <dt>MAX LINES</dt>
     <dd>{d3.max(data, d => d.line)}</dd>    
 </dl>
+
+<h2 style="margin-top: 3rem">Commits by time of Day</h2>
+
+<svg viewBox="0 0 {width} {height}">
+    <g class="dots">
+    {#each commits as c, index}
+        <circle 
+            cx={ xScale(c.datetime) }
+            cy={ yScale(c.hourFrac) }
+            r="5"
+            fill="steelblue"
+        />
+    {/each}
+    </g>
+
+</svg>
 
 <!-- <dl class="date_summary">
     <dt>DAY OF THE WEEK THAT MOST WORK IS DONE</dt>
