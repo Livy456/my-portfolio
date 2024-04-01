@@ -5,9 +5,7 @@
 <script>
     import projects from '$lib/projects.json';
     import Project from '$lib/Projects.svelte';
-    // import img1 from '$../static/images/ProjectImg_Corp_Own_Analysis.png';
-
-
+    
     // Description for 1st project- corporate investor data analysis
     // "I found that wealthy neighborhoods, such as Fenway, South Boston, and Waterfront had the 
     // highest corporate ownership rate and had a lot of college students residing in that neighborhood. 

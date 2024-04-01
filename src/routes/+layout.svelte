@@ -21,10 +21,10 @@
 <style> 
 label.color-scheme{
     position: absolute;
-    top: 0.5em;
-    right: 0.5rem;
-    padding-left: 0.5rem;
-    font-family: inherit;
+    top: 2.7em;
+    right: 1.1rem;
+    /* font-family: inherit; */
+    color:aliceblue
 }
 </style>
 <Navbar></Navbar>
