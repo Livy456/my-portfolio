@@ -9,6 +9,8 @@
     let xScale = d3.scaleTime();
     let xAxis, yAxis;
     let yAxisGridlines;
+    let hoveredIndex = -1;
+    $: hoveredCommit = commits[hoveredIndex]?? {};
 
     // defining axes
     let margin = {top: 10, right: 10, bottom: 30, left:20};
@@ -60,15 +62,7 @@
         });
 
         yScale = yScale.domain([0, 24]).range([usableArea.bottom, usableArea.top]); // might need to switch values currently domain = [0, height], range = [0, 24] 
-        xScale = xScale.domain( [ d3.min(commits, d => d.datetime), d3.max(commits, d => d.datetime) ] ).range( [usableArea.left, usableArea.right] );
-        // NOT SURE HOW TO GET THE scale.nice() scaling
-        // ALSO ERROR IS SAYING THAT COMMITS.DATETIME IS NOT ITERABLE
-        
-        // scaleTime(commits.datetime, d3.extent(commits.datetime))
-        // .domain(commits.datetime).nice();
-        // MAKING XSCALE MIGHT BE CAUSE OF FUTURE ERRORS
-        // d3.scaleTime(data.datetime, d3.extent(data.datetime));
-
+        xScale = xScale.domain(d3.extent(commits, d => d.datetime)).range( [usableArea.left, usableArea.right] ).nice();
     });
 
     $: fileLengths = d3.rollups(data, v => d3.max(v, v => v.line), d => d.file);
@@ -115,6 +109,10 @@
         overflow: visible;
         margin:25px;
     }
+
+    .gridlines{
+        stroke-opacity: 0.2;
+    }
     
 </style>
 <h2 class="meta">Summary</h2>
@@ -157,6 +155,8 @@
             r="5"
             fill="red"
         />
+        <!-- FUTURE EXPLORATION- MAKE A FUNCTION THAT CHANGES THE COLOR BASED ON TIME OF DAY 
+                I.E. MORNING IS ORANGE AND NIGHT IS BLUE -->
     {/each}
     </g>
 
