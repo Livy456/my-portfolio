@@ -16,13 +16,30 @@
 
 </script>
 
+<style>
+
+dl.home_page_stats{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+
+    dt{
+        grid-row: 1;
+        font-size: 20px;
+    }
+
+    dd{
+        grid-row: 2;
+        font-size: 50px;
+    }
+}
+</style>
+
 <h1> Olivia Dias</h1>
 <div class="home-page-container">
     
     <img class="portfolio-img" src="images/SeniorPhoto.png" alt="This is me!" width="250px" height="350px"> 
     <p class="biography">I am a Junior at MIT, studying Artificial Intelligence and Decision Making.</p>
 </div>
-
 
 <!-- Adds github information to home page -->
 {#await fetch("https://api.github.com/users/Livy456") }
@@ -35,7 +52,7 @@
         <section class="github stats">
             <!-- <p>The data is { JSON.stringify(data) }</p> -->
             <h2 style="font-family: garamond; font-size:30px;">My GitHub Stats</h2>
-            <dl>
+            <dl class="home_page_stats">
                 <dt>Followers:</dt>
                 <dd>{data.followers}</dd>
 

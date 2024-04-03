@@ -43,20 +43,7 @@ article{
     padding-left: 5px;
 }
 
-dl{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-}
 
-dt{
-    grid-row: 1;
-    font-size: 20px;
-}
-
-dd{
-    grid-row: 2;
-    font-size: 50px;
-}
 
 time{
     font-family: Baskerville;
