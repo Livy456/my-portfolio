@@ -4,7 +4,7 @@
 
     let data = [];
     let commits = [];
-    let width = 900, height = 450; // changed the height of the graph from 600 to 450
+    let width = 900, height = 600; // changed the height of the graph from 600 to 450
     let yScale = d3.scaleLinear();
     let xScale = d3.scaleTime();
     let xAxis, yAxis;
@@ -95,7 +95,8 @@
 
     .tooltip{
         position: fixed;
-        top: 1em;
+        margin:15px;
+        /* top: 1em; */
     }
 
 
@@ -134,7 +135,7 @@
 
     svg{
         overflow: visible;
-        margin:25px;
+        margin:150px;
     }
 
     .gridlines{
@@ -186,7 +187,9 @@
     
     
     
-    <dl id="commit-tooltip" class="info tooltip" hidden={hoveredIndex === -1}>
+    <dl id="commit-tooltip" class="info tooltip" 
+        hidden={hoveredIndex === -1}
+        style="top:{cursor.y}px; left:{cursor.x}px">
         <dt>Commit</dt>
         <dd> <a href="{ hoveredCommit.url}" target="_blank"> { hoveredCommit.id }</a> </dd>
     
@@ -227,8 +230,5 @@
                     I.E. MORNING IS ORANGE AND NIGHT IS BLUE -->
         {/each}
         </g>
-    
     </svg>
-
-
 </div>
