@@ -1,5 +1,6 @@
 <script>
     import * as d3 from "d3";
+    import Pie from "$lib/Pie.svelte";
     import { onMount } from "svelte";
     import {
         computePosition,
@@ -7,9 +8,10 @@
         offset
     } from '@floating-ui/dom';
 
+
     let data = [];
     let commits = [];
-    let width = 1000, height = 600; // changed the height of the graph from 600 to 450
+    let width = 900, height = 475; // changed the height of the graph from 600 to 450
     let yScale = d3.scaleLinear();
     let xScale = d3.scaleTime();
     let rScale = d3.scaleSqrt();
@@ -21,8 +23,17 @@
     let commitTooltip;
     let svg;
     let brushedSelection;
+    let selectedCommits;
+    let hasSelection;
+    let selectedLines;
+    let languageBreakdown;
+    let languageBreakdownArray;
     $: brushedSelection;
-
+    $: selectedCommits = brushedSelection ? commits.filter(isCommitSelected) : [];
+    $: hasSelection = brushedSelection && selectedCommits.length > 0;
+    $: selectedLines = (hasSelection ? selectedCommits: commits).flatMap(d => d.lines);
+    const format = d3.format(".1~%");
+        
     // defining axes
     let margin = {top: 10, right: 10, bottom: 30, left:20};
     let usableArea = {
@@ -44,6 +55,7 @@
     onMount(async() => {
         data = await d3.csv("loc.csv", row=> ({
             ...row,
+            type: String(row.type),
             line: Number(row.line),
             depth: Number(row.depth),
             length: Number(row.length),
@@ -56,6 +68,7 @@
             let {author, date, time, timezone, datetime} = first;
             let ret = {
                 id: commit,
+                // language: type,
                 url: "https://github.com/Livy456/my-portfolio" + commit,
                 author, date, time, timezone, datetime,
                 hourFrac: datetime.getHours() + datetime.getMinutes() / 60,
@@ -77,12 +90,16 @@
 
         yScale = yScale.domain([0, 24]).range([usableArea.bottom, usableArea.top]); // might need to switch values currently domain = [0, height], range = [0, 24] 
         xScale = xScale.domain(d3.extent(commits, d => d.datetime)).range( [usableArea.left, usableArea.right] ).nice();
-        rScale = rScale.domain(d3.extent(commits, d => d.totalLines)).range([3, 30]);
+        rScale = rScale.domain(d3.extent(commits, d => d.totalLines)).range([5, 30]);
+        
     });
 
     $: fileLengths = d3.rollups(data, v => d3.max(v, v => v.line), d => d.file);
     $: avgFileLength = d3.mean(fileLengths, f => f[1]);
     $: workByPeriod = d3.rollups(data, v=> v.length, d => d.datetime.toLocaleString("en", {dayPeriod: "short"}) );
+    $: languageBreakdown = d3.rollups(data, v => v.length, d => d.type);    
+    $: languageBreakdownArray = Array.from(languageBreakdown).map( ([language, lines]) => ({label: language, value:lines}) );
+    
     $: maxPeriod = d3.greatest(workByPeriod, (d) => d[1])?.[0];
     $: {
         d3.select(svg).call(d3.brush().on("start brush end", brushed));
@@ -141,7 +158,7 @@
 
         return false;
     }
-
+    
 </script>
 
 <style>
@@ -225,8 +242,6 @@
         font-family: 'Segoe UI';
     }
 
-    
-
     .gridlines{
         stroke-opacity: 0.2;
     }
@@ -241,7 +256,7 @@
             transition: 200ms;
             transform-origin: center;
             transform-box: fill-box;
-            fill-opacity: 100%; 
+            /* fill-opacity: 100%;  */
             /* HOW DO YOU CHANGE THE OPACITY OF BIGGER DOTS */
 
             &:hover
@@ -249,6 +264,24 @@
                 transform: scale(1.5);
                 
             }
+        }
+    }
+
+    .meta_legend{
+        display: grid;
+
+
+        dd{
+            grid-row: 1;
+            margin: 0px;
+            font-size: 15px;
+            text-transform: uppercase;
+            color: rgb(99, 99, 99);
+            font-family: 'Segoe UI';
+        }
+
+        dt{
+            grid-row: 2;
         }
     }
     
@@ -299,6 +332,9 @@
     
         <dt>Lines</dt>
         <dd>{ hoveredCommit.totalLines }</dd>
+
+        <!-- <dt>Language</dt>
+        <dd>{ hoveredCommit.language }</dd> -->
     </dl>
     
     <svg viewBox="0 0 {width} {height}" bind:this={svg}>
@@ -314,6 +350,7 @@
                 cy={ yScale(commit.hourFrac) }
                 r= { rScale(commit.totalLines) }
                 fill="#B19CD9"
+                fill-opacity= {(105 - rScale(commit.totalLines))/100}
                 on:mouseenter= {evt=> dotInteraction(index, evt)}
                 on:mouseleave={evt => dotInteraction(index, evt)}
                 tabindex="0"
@@ -328,4 +365,26 @@
         {/each}
         </g>
     </svg>
+
+    <p>{hasSelection ? selectedCommits.length : "No"} commits selected</p>
+    <dl class="meta_legend">
+        <Pie data={languageBreakdownArray}></Pie>
+
+        <!-- GET HELP WITH CHANGING THE PERCENT WHEN COMMITS ARE SELECTED!!! -->
+        <!-- {#each languageBreakdown as [language, line]}
+            
+            {#if !hasSelection}
+                <dd>{language}</dd>
+                <dt>{line} lines ( {format(line / data.length) })</dt>
+            {/if}
+
+            {#if hasSelection}
+                <dd>{language}</dd>
+                <dt>{lines} lines ( {format(line / selectedLines.length) })</dt>
+            {/if}
+            
+        {/each} -->
+    </dl>
+    
 </div>
+

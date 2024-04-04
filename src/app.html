@@ -10,7 +10,7 @@
 		%sveltekit.head%
 		<script>
 			let root = document.documentElement;
-			let colorScheme = localStorage.colorScheme ?? "light dark";
+			let colorScheme = localStorage.colorScheme ?? "light dark"; // Changes the color scheme
 
 			root.style.setProperty("color-scheme", colorScheme);
 		</script>

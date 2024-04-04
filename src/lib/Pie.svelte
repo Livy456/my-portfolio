@@ -1,6 +1,5 @@
 <script>
     import * as d3 from 'd3';
-
     export let data = [];
     export let selectedIndex = -1;
     
@@ -119,7 +118,6 @@
             class:selected={selectedIndex === i} 
             on:click={e => toggleWedge(i, e)} 
             on:keyup={e => toggleWedge(i, e)}/>
-            <!-- selectedIndex = selectedIndex === i ? -1: i} /> -->
         {/each}  
     </svg>
     <ul class="legend">
