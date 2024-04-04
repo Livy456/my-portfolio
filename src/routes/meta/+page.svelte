@@ -8,7 +8,6 @@
         offset
     } from '@floating-ui/dom';
 
-
     let data = [];
     let commits = [];
     let width = 900, height = 475; // changed the height of the graph from 600 to 450
@@ -28,10 +27,13 @@
     let selectedLines;
     let languageBreakdown;
     let languageBreakdownArray;
-    $: brushedSelection;
-    $: selectedCommits = brushedSelection ? commits.filter(isCommitSelected) : [];
+
+    // let brushedSelection;
+    $: selectedCommits = brushedSelection ? commits.filter(isCommitSelected) : [];    
     $: hasSelection = brushedSelection && selectedCommits.length > 0;
-    $: selectedLines = (hasSelection ? selectedCommits: commits).flatMap(d => d.lines);
+    // $: selectedLines = (hasSelection ? selectedCommits: commits).flatMap(d => d.lines);
+    $: selectedLines = hasSelection ? data.filter((d) => selectedCommits.map(commit => commit.id).includes(d.commit)) : data;
+
     const format = d3.format(".1~%");
         
     // defining axes
@@ -68,7 +70,6 @@
             let {author, date, time, timezone, datetime} = first;
             let ret = {
                 id: commit,
-                // language: type,
                 url: "https://github.com/Livy456/my-portfolio" + commit,
                 author, date, time, timezone, datetime,
                 hourFrac: datetime.getHours() + datetime.getMinutes() / 60,
@@ -97,9 +98,12 @@
     $: fileLengths = d3.rollups(data, v => d3.max(v, v => v.line), d => d.file);
     $: avgFileLength = d3.mean(fileLengths, f => f[1]);
     $: workByPeriod = d3.rollups(data, v=> v.length, d => d.datetime.toLocaleString("en", {dayPeriod: "short"}) );
-    $: languageBreakdown = d3.rollups(data, v => v.length, d => d.type);    
+    $: languageBreakdown = d3.rollups(selectedLines, v=> v.length, d => d.type);    
     $: languageBreakdownArray = Array.from(languageBreakdown).map( ([language, lines]) => ({label: language, value:lines}) );
-    
+
+    $: {
+        console.log(languageBreakdown)
+    }
     $: maxPeriod = d3.greatest(workByPeriod, (d) => d[1])?.[0];
     $: {
         d3.select(svg).call(d3.brush().on("start brush end", brushed));
@@ -131,7 +135,6 @@
     function brushed (evt)
     {
         brushedSelection = evt.selection;
-        // console.log(brushedSelection);
     }
 
     function isCommitSelected(commit)
@@ -336,7 +339,6 @@
         <!-- <dt>Language</dt>
         <dd>{ hoveredCommit.language }</dd> -->
     </dl>
-    
     <svg viewBox="0 0 {width} {height}" bind:this={svg}>
         <g transform="translate(0, {usableArea.bottom})" bind:this={xAxis} />
         <g class="gridlines" transform="translate({usableArea.left}, 0)" bind:this={yAxisGridlines} />
@@ -369,22 +371,8 @@
     <p>{hasSelection ? selectedCommits.length : "No"} commits selected</p>
     <dl class="meta_legend">
         <Pie data={languageBreakdownArray}></Pie>
-
-        <!-- GET HELP WITH CHANGING THE PERCENT WHEN COMMITS ARE SELECTED!!! -->
-        <!-- {#each languageBreakdown as [language, line]}
-            
-            {#if !hasSelection}
-                <dd>{language}</dd>
-                <dt>{line} lines ( {format(line / data.length) })</dt>
-            {/if}
-
-            {#if hasSelection}
-                <dd>{language}</dd>
-                <dt>{lines} lines ( {format(line / selectedLines.length) })</dt>
-            {/if}
-            
-        {/each} -->
     </dl>
+    
     
 </div>
 
