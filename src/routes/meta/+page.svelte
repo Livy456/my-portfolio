@@ -9,7 +9,7 @@
 
     let data = [];
     let commits = [];
-    let width = 900, height = 600; // changed the height of the graph from 600 to 450
+    let width = 1000, height = 600; // changed the height of the graph from 600 to 450
     let yScale = d3.scaleLinear();
     let xScale = d3.scaleTime();
     let rScale = d3.scaleSqrt();
@@ -20,6 +20,8 @@
     let tooltipPosition = {x:0, y:0};
     let commitTooltip;
     let svg;
+    let brushedSelection;
+    $: brushedSelection;
 
     // defining axes
     let margin = {top: 10, right: 10, bottom: 30, left:20};
@@ -82,7 +84,10 @@
     $: avgFileLength = d3.mean(fileLengths, f => f[1]);
     $: workByPeriod = d3.rollups(data, v=> v.length, d => d.datetime.toLocaleString("en", {dayPeriod: "short"}) );
     $: maxPeriod = d3.greatest(workByPeriod, (d) => d[1])?.[0];
-    $: d3.select(svg).call(d3.brush());
+    $: {
+        d3.select(svg).call(d3.brush().on("start brush end", brushed));
+        d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
+    }
 
     async function dotInteraction (index, evt){
         let hoveredDot = evt.target;
@@ -106,9 +111,61 @@
         }
     }
 
+    function brushed (evt)
+    {
+        brushedSelection = evt.selection;
+        // console.log(brushedSelection);
+    }
+
+    function isCommitSelected(commit)
+    {
+        if(!brushedSelection)
+        {
+            return false;
+        }
+
+        // get points of brushed selection box
+        let top_left = {x: brushedSelection[0][0], y: brushedSelection[0][1]};
+        let bottom_right = {x: brushedSelection[1][0], y: brushedSelection[1][1]};
+
+        // gets coordinate of commit data point
+        let commit_x_coord = xScale(commit.datetime);
+        let commit_y_coord = yScale(commit.hourFrac)
+
+        // checks if commit data point is within selected brush region
+        if(commit_x_coord >= top_left.x && commit_x_coord <= bottom_right.x && 
+           commit_y_coord >= top_left.y && commit_y_coord <= bottom_right.y)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
 </script>
 
 <style>
+
+@keyframes marching-ants {
+        to{
+            stroke-dashoffset: -8;
+        }
+    }
+
+    svg :global(.selection){
+        /* overflow: visible;
+        margin:50px; */
+        fill-opacity: 10%;
+        stroke: black;
+        stroke-opacity: 70%;
+        stroke-dasharray: 5 3;
+        animation: marching-ants 2s linear infinite;
+    }
+
+    svg{
+        margin:50px;
+    }
+
     dl.info
     {
         display: grid;
@@ -168,17 +225,18 @@
         font-family: 'Segoe UI';
     }
 
-    svg{
-        overflow: visible;
-        margin:50px;
-        /* margin: 150px; */
-    }
+    
 
     .gridlines{
         stroke-opacity: 0.2;
     }
     
     .dots{
+
+        circle.selected{
+            fill: rgb(228, 24, 24)
+        }
+
         circle{
             transition: 200ms;
             transform-origin: center;
@@ -223,8 +281,6 @@
         <dd>{d3.max(data, d => d.line)}</dd>    
     </dl>
     
-    
-    
     <dl id="commit-tooltip" class="info tooltip" 
         hidden={hoveredIndex === -1}
         bind:this={commitTooltip}
@@ -253,10 +309,11 @@
         <g class="dots">
         {#each commits as commit, index}
             <circle 
+                class:selected={isCommitSelected(commit)}
                 cx={ xScale(commit.datetime) }
                 cy={ yScale(commit.hourFrac) }
                 r= { rScale(commit.totalLines) }
-                fill="red"
+                fill="#B19CD9"
                 on:mouseenter= {evt=> dotInteraction(index, evt)}
                 on:mouseleave={evt => dotInteraction(index, evt)}
                 tabindex="0"
