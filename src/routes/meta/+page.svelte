@@ -1,17 +1,25 @@
 <script>
     import * as d3 from "d3";
     import { onMount } from "svelte";
+    import {
+        computePosition,
+        autoPlacement,
+        offset
+    } from '@floating-ui/dom';
 
     let data = [];
     let commits = [];
     let width = 900, height = 600; // changed the height of the graph from 600 to 450
     let yScale = d3.scaleLinear();
     let xScale = d3.scaleTime();
+    let rScale = d3.scaleSqrt();
     let xAxis, yAxis;
     let yAxisGridlines;
     let hoveredIndex = -1;
     $: hoveredCommit = commits[hoveredIndex]?? {};
-    let cursor = {x:0, y:0};
+    let tooltipPosition = {x:0, y:0};
+    let commitTooltip;
+    let svg;
 
     // defining axes
     let margin = {top: 10, right: 10, bottom: 30, left:20};
@@ -24,6 +32,7 @@
     usableArea.width = usableArea.right - usableArea.left;
     usableArea.height = usableArea.bottom - usableArea.top;
 
+    // creating axis on page
     $: {
         d3.select(xAxis).call(d3.axisBottom(xScale));
         d3.select(yAxis).call(d3.axisLeft(yScale).tickFormat(d => String(d % 24).padStart(2, "0") + ":00"));
@@ -62,14 +71,40 @@
 
         });
 
+        commits = d3.sort(commits, d => -d.totalLines);
+
         yScale = yScale.domain([0, 24]).range([usableArea.bottom, usableArea.top]); // might need to switch values currently domain = [0, height], range = [0, 24] 
         xScale = xScale.domain(d3.extent(commits, d => d.datetime)).range( [usableArea.left, usableArea.right] ).nice();
+        rScale = rScale.domain(d3.extent(commits, d => d.totalLines)).range([3, 30]);
     });
 
     $: fileLengths = d3.rollups(data, v => d3.max(v, v => v.line), d => d.file);
     $: avgFileLength = d3.mean(fileLengths, f => f[1]);
     $: workByPeriod = d3.rollups(data, v=> v.length, d => d.datetime.toLocaleString("en", {dayPeriod: "short"}) );
     $: maxPeriod = d3.greatest(workByPeriod, (d) => d[1])?.[0];
+    $: d3.select(svg).call(d3.brush());
+
+    async function dotInteraction (index, evt){
+        let hoveredDot = evt.target;
+        
+        if (evt.type === "mouseenter" || evt.type === "focus")
+        {
+            hoveredIndex = index;
+            // tooltipPosition = {x:evt.x, y:evt.y};
+            tooltipPosition = await computePosition(hoveredDot, commitTooltip, {
+                strategy: "fixed",
+                middleware: [
+                    offset(20),
+                    autoPlacement()
+                ],
+            });
+        }
+
+        else if (evt.type === "mouseleave" || evt.type === "blur")
+        {
+            hoveredIndex = -1;
+        }
+    }
 
 </script>
 
@@ -135,7 +170,8 @@
 
     svg{
         overflow: visible;
-        margin:150px;
+        margin:50px;
+        /* margin: 150px; */
     }
 
     .gridlines{
@@ -147,6 +183,8 @@
             transition: 200ms;
             transform-origin: center;
             transform-box: fill-box;
+            fill-opacity: 100%; 
+            /* HOW DO YOU CHANGE THE OPACITY OF BIGGER DOTS */
 
             &:hover
             {
@@ -189,7 +227,8 @@
     
     <dl id="commit-tooltip" class="info tooltip" 
         hidden={hoveredIndex === -1}
-        style="top:{cursor.y}px; left:{cursor.x}px">
+        bind:this={commitTooltip}
+        style="top:{tooltipPosition.y}px; left:{tooltipPosition.x}px">
         <dt>Commit</dt>
         <dd> <a href="{ hoveredCommit.url}" target="_blank"> { hoveredCommit.id }</a> </dd>
     
@@ -206,7 +245,7 @@
         <dd>{ hoveredCommit.totalLines }</dd>
     </dl>
     
-    <svg viewBox="0 0 {width} {height}">
+    <svg viewBox="0 0 {width} {height}" bind:this={svg}>
         <g transform="translate(0, {usableArea.bottom})" bind:this={xAxis} />
         <g class="gridlines" transform="translate({usableArea.left}, 0)" bind:this={yAxisGridlines} />
         <g transform="translate({usableArea.top})" bind:this={yAxis}/>
@@ -216,15 +255,16 @@
             <circle 
                 cx={ xScale(commit.datetime) }
                 cy={ yScale(commit.hourFrac) }
-                r="5"
+                r= { rScale(commit.totalLines) }
                 fill="red"
-                on:mouseenter={evt => 
-                    {
-                        hoveredIndex = index
-                        cursor = {x:evt.x, y:evt.y}
-                    }
-                }
-                on:mouseleave={evt => hoveredIndex = -1}
+                on:mouseenter= {evt=> dotInteraction(index, evt)}
+                on:mouseleave={evt => dotInteraction(index, evt)}
+                tabindex="0"
+                aria-describedby="commit-tooltip"
+                role="tooltip"
+                aria-haspopup="true"
+                on:focus={evt=> dotInteraction(index, evt)}
+                on:blur={evt=> dotInteraction(index, evt)}
             />
             <!-- FUTURE EXPLORATION- MAKE A FUNCTION THAT CHANGES THE COLOR BASED ON TIME OF DAY 
                     I.E. MORNING IS ORANGE AND NIGHT IS BLUE -->
