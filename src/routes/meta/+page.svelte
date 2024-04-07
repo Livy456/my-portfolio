@@ -65,7 +65,12 @@
             datetime: new Date(row.datetime)
         }));
 
-        commits = d3.groups(data, d => d.commit).map( ([commit, lines]) => {
+        
+
+        
+        
+    });
+    $: commits = d3.groups(data, d => d.commit).map( ([commit, lines]) => {
             let first = lines[0];
             let {author, date, time, timezone, datetime} = first;
             let ret = {
@@ -87,23 +92,16 @@
 
         });
 
-        commits = d3.sort(commits, d => -d.totalLines);
-
-        yScale = yScale.domain([0, 24]).range([usableArea.bottom, usableArea.top]); // might need to switch values currently domain = [0, height], range = [0, 24] 
-        xScale = xScale.domain(d3.extent(commits, d => d.datetime)).range( [usableArea.left, usableArea.right] ).nice();
-        rScale = rScale.domain(d3.extent(commits, d => d.totalLines)).range([5, 30]);
-        
-    });
+    $: commits = d3.sort(commits, d => -d.totalLines);
+    $: yScale = yScale.domain([0, 24]).range([usableArea.bottom, usableArea.top]); // might need to switch values currently domain = [0, height], range = [0, 24] 
+    $: xScale = xScale.domain(d3.extent(commits, d => d.datetime)).range( [usableArea.left, usableArea.right] ).nice();
+    $: rScale = rScale.domain(d3.extent(commits, d => d.totalLines)).range([5, 30]);
 
     $: fileLengths = d3.rollups(data, v => d3.max(v, v => v.line), d => d.file);
     $: avgFileLength = d3.mean(fileLengths, f => f[1]);
     $: workByPeriod = d3.rollups(data, v=> v.length, d => d.datetime.toLocaleString("en", {dayPeriod: "short"}) );
     $: languageBreakdown = d3.rollups(selectedLines, v=> v.length, d => d.type);    
     $: languageBreakdownArray = Array.from(languageBreakdown).map( ([language, lines]) => ({label: language, value:lines}) );
-
-    $: {
-        console.log(languageBreakdown)
-    }
     $: maxPeriod = d3.greatest(workByPeriod, (d) => d[1])?.[0];
     $: {
         d3.select(svg).call(d3.brush().on("start brush end", brushed));
