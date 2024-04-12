@@ -2,27 +2,27 @@
     {
         "title": "Data Activism",
         "year": 2022, 
-        "image": "../src/lib/images/DataActivismChart.png",
+        "image": "images/DataActivismChart.png",
         "description": "I curated a curriculum that integrated social justice and data science to encourage minoritized high school students to pursue a career in STEM."
     },
     {
         "title": "Corporate Investor Data Analysis",
         "year": 2024,
-        "image": "../src/lib/images/ProjectImg_Corp_Own_Analysis.png",
+        "image": "images/ProjectImg_Corp_Own_Analysis.png",
         "description": "Performed an exploratory data analysis on Metropolitan Area Planning Council(MAPC) dataset which contained census information and corporate ownership rate for each neighborhood in the Boston area." 
     },
     {
         "title": "RL Computational Tool",
         "year": 2023, 
-        "image": "../src/lib/images/RAICA_Website.png",
+        "image": "images/RAICA_Website.png",
         "description": "I made a website that hosts a self-driving game. I made this computational tool as a part of a research opportunity program to enable middle school and high school students learn about reinforcement learning concepts."
     },
     
     {
-        "title": "Perferendis cupiditate iste in?",
-        "year":2023,
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Consectetur perferendis nesciunt sunt molestias quo nostrum aliquam ducimus placeat. Optio ad consectetur corporis eum dicta, veniam iusto similique dolorum. Laboriosam labore blanditiis odio assumenda modi corporis veniam impedit ipsa!"
+        "title": "Interactive MapBox Visualization of BlueBike Stations",
+        "year":2024,
+        "image": "images/MapboxBlueBike.png",
+        "description": "I utilized mapbox to visualize the total traffic of blue bike stations. And allow the uers to be able to filter based on time of day."
     },
     {
         "title": "Suscipit laborum neque eligendi.",
