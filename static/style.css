@@ -92,15 +92,10 @@ a.current{
     font-weight: bold;
 }
 
-a:hover{
-    border-bottom-color: rgb(3, 87, 205);
-    border-bottom-width: 0.3em;
-    padding-bottom: 0.1em;
-    background-color: rgb(212, 251, 255);
-    font-weight: bold;
-}
 
-a{
+
+
+.navigation_bar{
     flex: 1;
     text-decoration: none;
     text-align: center;
@@ -110,6 +105,15 @@ a{
     border-bottom-color: rgb(60, 168, 240);
     font-size: 20px;
     color: rgb(82, 82, 203);
+
+    a:hover{
+        border-bottom-color: rgb(3, 87, 205);
+        border-bottom-width: 0.3em;
+        padding-bottom: 0.1em;
+        background-color: rgb(212, 251, 255);
+        font-weight: bold;
+    }
+    
 }
 
 .home-page-container{
@@ -120,14 +124,16 @@ a{
 
 .portfolio-img{
     padding:15px;
-    margin:10px
+    margin:10px;
+    max-height: 100%;
+    max-width: 100%;
 }
 
 img{
     max-width: 100%;
     /* align-items: center; */
-    max-height: 100%;
-    border: 5px solid rgb(181, 235, 231);
+    max-height: 250px;
+    /* border: 5px solid rgb(181, 235, 231); */
     /* padding:15px; */
     /* margin:10px */
 }

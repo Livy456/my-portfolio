@@ -1,75 +1,86 @@
 [
     {
-        "title": "Data Activism",
-        "year": 2022, 
-        "image": "images/DataActivismChart.png",
-        "description": "I curated a curriculum that integrated social justice and data science to encourage minoritized high school students to pursue a career in STEM."
-    },
-    {
         "title": "Corporate Investor Data Analysis",
         "year": 2024,
         "image": "images/ProjectImg_Corp_Own_Analysis.png",
-        "description": "Performed an exploratory data analysis on Metropolitan Area Planning Council(MAPC) dataset which contained census information and corporate ownership rate for each neighborhood in the Boston area." 
+        "description": "Performed an exploratory data analysis on Metropolitan Area Planning Council(MAPC) dataset which contained census information and corporate ownership rate for each neighborhood in the Boston area.", 
+        "url":"https://livy456.github.io/A2-Report/"
+    },
+    {
+        "title": "Interactive MapBox Visualization of BlueBike Stations",
+        "year":2024,
+        "image": "images/MapboxBlueBike.png",
+        "description": "I utilized mapbox to visualize the total traffic of blue bike stations. And allow the uers to be able to filter based on time of day.",
+        "url": "https://livy456.github.io/bikewatching/"
     },
     {
         "title": "RL Computational Tool",
         "year": 2023, 
         "image": "images/RAICA_Website.png",
-        "description": "I made a website that hosts a self-driving game. I made this computational tool as a part of a research opportunity program to enable middle school and high school students learn about reinforcement learning concepts."
+        "description": "I made a website that hosts a self-driving game. I made this computational tool as a part of a research opportunity program to enable middle school and high school students learn about reinforcement learning concepts.",
+        "url": "https://livy456.github.io/RAICA-RL-Computational-Tool/"
     },
-    
     {
-        "title": "Interactive MapBox Visualization of BlueBike Stations",
-        "year":2024,
-        "image": "images/MapboxBlueBike.png",
-        "description": "I utilized mapbox to visualize the total traffic of blue bike stations. And allow the uers to be able to filter based on time of day."
+        "title": "Data Activism",
+        "year": 2022, 
+        "image": "images/DataActivismChart.png",
+        "description": "I curated a curriculum that integrated social justice and data science to encourage minoritized high school students to pursue a career in STEM.",
+        "url": "https://deepnote.com/workspace/media-lab-7b3bfd3f-e5db-4409-9dbf-6ff83ea4c293/project/AnswerKeyCollege-Demographics-Analysis-f1f1cd8c-b2be-42aa-9543-82ee6a7fef32/notebook/notebook-1839a61f184144a5ad327fbeb7531e2c"
     },
     {
         "title": "Suscipit laborum neque eligendi.",
         "year":2022,
         "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Quia repellat sint enim quam esse labore perferendis saepe harum doloribus vero quasi veniam voluptatem consequatur, earum aut possimus natus minima recusandae ex! Dolorem itaque quidem aliquam eius iusto iste?"
+        "description": "Quia repellat sint enim quam esse labore perferendis saepe harum doloribus vero quasi veniam voluptatem consequatur, earum aut possimus natus minima recusandae ex! Dolorem itaque quidem aliquam eius iusto iste?",
+        "url": ""
     },
     {
         "title": "Hello World",
         "year":2023,
         "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Quia repellat sint enim quam esse labore perferendis saepe harum doloribus vero quasi veniam voluptatem consequatur, earum aut possimus natus minima recusandae ex! Dolorem itaque quidem aliquam eius iusto iste?"
+        "description": "Quia repellat sint enim quam esse labore perferendis saepe harum doloribus vero quasi veniam voluptatem consequatur, earum aut possimus natus minima recusandae ex! Dolorem itaque quidem aliquam eius iusto iste?",
+        "url": ""
     },
     {
         "title": "JavaScript",
         "year":2024,
         "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Quia repellat sint enim quam esse labore perferendis saepe harum doloribus vero quasi veniam voluptatem consequatur, earum aut possimus natus minima recusandae ex! Dolorem itaque quidem aliquam eius iusto iste?"
+        "description": "Quia repellat sint enim quam esse labore perferendis saepe harum doloribus vero quasi veniam voluptatem consequatur, earum aut possimus natus minima recusandae ex! Dolorem itaque quidem aliquam eius iusto iste?",
+        "url": ""
     },
     {
         "title": "Python",
         "year":2021,
         "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Quia repellat sint enim quam esse labore perferendis saepe harum doloribus vero quasi veniam voluptatem consequatur, earum aut possimus natus minima recusandae ex! Dolorem itaque quidem aliquam eius iusto iste?"
+        "description": "Quia repellat sint enim quam esse labore perferendis saepe harum doloribus vero quasi veniam voluptatem consequatur, earum aut possimus natus minima recusandae ex! Dolorem itaque quidem aliquam eius iusto iste?",
+        "url": ""
     },
     {
         "title": "HTML",
         "year":2021,
         "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Quia repellat sint enim quam esse labore perferendis saepe harum doloribus vero quasi veniam voluptatem consequatur, earum aut possimus natus minima recusandae ex! Dolorem itaque quidem aliquam eius iusto iste?"
+        "description": "Quia repellat sint enim quam esse labore perferendis saepe harum doloribus vero quasi veniam voluptatem consequatur, earum aut possimus natus minima recusandae ex! Dolorem itaque quidem aliquam eius iusto iste?",
+        "url": ""
     },
     {
         "title": "CSS",
         "year":2023,
         "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Quia repellat sint enim quam esse labore perferendis saepe harum doloribus vero quasi veniam voluptatem consequatur, earum aut possimus natus minima recusandae ex! Dolorem itaque quidem aliquam eius iusto iste?"
+        "description": "Quia repellat sint enim quam esse labore perferendis saepe harum doloribus vero quasi veniam voluptatem consequatur, earum aut possimus natus minima recusandae ex! Dolorem itaque quidem aliquam eius iusto iste?",
+        "url": ""
     },
     {
         "title": "Tableau",
         "year":2022,
         "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Quia repellat sint enim quam esse labore perferendis saepe harum doloribus vero quasi veniam voluptatem consequatur, earum aut possimus natus minima recusandae ex! Dolorem itaque quidem aliquam eius iusto iste?"
+        "description": "Quia repellat sint enim quam esse labore perferendis saepe harum doloribus vero quasi veniam voluptatem consequatur, earum aut possimus natus minima recusandae ex! Dolorem itaque quidem aliquam eius iusto iste?",
+        "url": ""
     },
     {
         "title": "D3",
         "year":2022,
         "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Quia repellat sint enim quam esse labore perferendis saepe harum doloribus vero quasi veniam voluptatem consequatur, earum aut possimus natus minima recusandae ex! Dolorem itaque quidem aliquam eius iusto iste?"
+        "description": "Quia repellat sint enim quam esse labore perferendis saepe harum doloribus vero quasi veniam voluptatem consequatur, earum aut possimus natus minima recusandae ex! Dolorem itaque quidem aliquam eius iusto iste?",
+        "url": ""
     }
 ]
