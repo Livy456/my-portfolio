@@ -3,20 +3,27 @@
     export let data = [];
     export let selectedIndex = -1;
     
-    let fillColors = d3.scaleOrdinal(d3.schemeTableau10); // returns a function that uses index to produce a color
+    // returns a function that uses index to produce a color
+    let fillColors = d3.scaleOrdinal(d3.schemeTableau10); 
     let sliceGenerator = d3.pie().value(d => d.value);
-    let arcData;
-    $: arcData = sliceGenerator(data);
+    let pieData;
+    $:{
+        let arcData;
+        let arcs;
+        pieData = data.map(d => ({...d}) );
+        arcData = sliceGenerator(data);
+        arcs = arcData.map(d => arcGenerator(d));
+        console.log("arcData: ", arcData);
 
+        pieData = pieData.map( (d, i) =>  ({...d, ...arcData[i], arc: arcs[i]}) );
+    }
+    
     let arcGenerator = d3.arc().innerRadius(0).outerRadius(50);
-    let arcs;
-    $: arcs = arcData.map(d => arcGenerator(d));
 
     function toggleWedge(index, event){
         if(selectedIndex === index)
         {
             selectedIndex = -1;
-            console.log("they are equal!!");
         }
         
         else if(!event.key || event.key === "Enter")
@@ -35,7 +42,6 @@
         /* Doesn't clip the shape even if it'd outside of viewbox */
         overflow: visible;
         padding-bottom:25px;
-
     }
 
     svg:has(path:hover, path:focus-visible)
@@ -46,7 +52,7 @@
     }
 
     path{
-        transition: 300ms;
+        transition: 700ms;
         outline: none;
         cursor: pointer;
         --angle: calc(var(--end-angle) - var(--start-angle));
@@ -105,13 +111,13 @@
 <div class="container">
 
     <svg viewBox= "-190 -55 100 100">
-        {#each arcs as arc, i}
-            <path d={arc} 
+        {#each pieData  as d, i}
+            <path d={d.arc} 
             style="
-            --start-angle: { arcData[i]?.startAngle }rad;
-            --end-angle: { arcData[i]?.endAngle }rad;"
+            --start-angle: { d.startAngle }rad;
+            --end-angle: { d.endAngle }rad;"
             
-            fill= {fillColors(i)} 
+            fill= {fillColors(d.label)} 
             tabindex="0"
             aria-label="Pie Chart"
             role= "button"
@@ -121,8 +127,8 @@
         {/each}  
     </svg>
     <ul class="legend">
-        {#each data as d, index}
-            <li style="--color: { fillColors(index) }">
+        {#each pieData  as d, index}
+            <li style="--color: { fillColors(d.label) }">
                 <span class="swatch" class:selected={selectedIndex === index}></span>
                 {d.label} <em> ({d.value})</em>
             

@@ -17,25 +17,23 @@
     let xAxis, yAxis;
     let yAxisGridlines;
     let hoveredIndex = -1;
-    $: hoveredCommit = commits[hoveredIndex]?? {};
     let tooltipPosition = {x:0, y:0};
     let commitTooltip;
     let svg;
     let brushedSelection;
-    let selectedCommits;
-    let hasSelection;
+    let selectedCommits = [];
+    let hasSelection = undefined;
     let selectedLines;
     let languageBreakdown;
     let languageBreakdownArray;
+    const format = d3.format(".1~%");
 
-    // let brushedSelection;
-    $: selectedCommits = brushedSelection ? commits.filter(isCommitSelected) : [];    
-    $: hasSelection = brushedSelection && selectedCommits.length > 0;
+    // $: selectedCommits = brushedSelection ? commits.filter(isCommitSelected) : []; 
+    $: hoveredCommit = commits[hoveredIndex]?? {};   
+    $: hasSelection = brushedSelection || selectedCommits.length > 0;
     // $: selectedLines = (hasSelection ? selectedCommits: commits).flatMap(d => d.lines);
     $: selectedLines = hasSelection ? data.filter((d) => selectedCommits.map(commit => commit.id).includes(d.commit)) : data;
 
-    const format = d3.format(".1~%");
-        
     // defining axes
     let margin = {top: 10, right: 10, bottom: 30, left:20};
     let usableArea = {
@@ -64,12 +62,8 @@
             date: new Date(row.date + "T00:00" + row.timezone),
             datetime: new Date(row.datetime)
         }));
-
-        
-
-        
-        
     });
+
     $: commits = d3.groups(data, d => d.commit).map( ([commit, lines]) => {
             let first = lines[0];
             let {author, date, time, timezone, datetime} = first;
@@ -114,7 +108,6 @@
         if (evt.type === "mouseenter" || evt.type === "focus")
         {
             hoveredIndex = index;
-            // tooltipPosition = {x:evt.x, y:evt.y};
             tooltipPosition = await computePosition(hoveredDot, commitTooltip, {
                 strategy: "fixed",
                 middleware: [
@@ -128,36 +121,43 @@
         {
             hoveredIndex = -1;
         }
+
+        else if ( (evt.type === "click") || ( (evt.type === "keyup") && (evt.key === "Enter") ) )
+        {
+            // changes selected commits to be just the individual commit clicked on
+            selectedCommits = [ commits[index] ]; 
+
+            // BUG, SELECTEDCOMMITS IS NOT BEING UPDATED GLOBALLY
+            // console.log("selectedCommits ", selectedCommits);
+        }
     }
 
     function brushed (evt)
     {
-        brushedSelection = evt.selection;
+        let brushedSelection = evt.selection;
+
+        selectedCommits = !brushedSelection ? [] : commits.filter(commit => {
+            let top_left = {x: brushedSelection[0][0], y: brushedSelection[0][1]};
+            let bottom_right = {x: brushedSelection[1][0], y: brushedSelection[1][1]};
+
+            let commit_x_coord = xScale(commit.datetime);
+            let commit_y_coord = yScale(commit.hourFrac);
+
+            if ((commit_x_coord >= top_left.x) && (commit_y_coord >= top_left.y) && 
+                (commit_x_coord <= bottom_right.x) && (commit_y_coord <= bottom_right.y))
+            {
+                console.log("I have been selected, inside brush function!!");
+                hasSelection = true;
+                return true;
+            }
+            hasSelection = undefined;
+            return false;
+        });
     }
 
     function isCommitSelected(commit)
     {
-        if(!brushedSelection)
-        {
-            return false;
-        }
-
-        // get points of brushed selection box
-        let top_left = {x: brushedSelection[0][0], y: brushedSelection[0][1]};
-        let bottom_right = {x: brushedSelection[1][0], y: brushedSelection[1][1]};
-
-        // gets coordinate of commit data point
-        let commit_x_coord = xScale(commit.datetime);
-        let commit_y_coord = yScale(commit.hourFrac)
-
-        // checks if commit data point is within selected brush region
-        if(commit_x_coord >= top_left.x && commit_x_coord <= bottom_right.x && 
-           commit_y_coord >= top_left.y && commit_y_coord <= bottom_right.y)
-        {
-            return true;
-        }
-
-        return false;
+        return selectedCommits.includes(commit);
     }
     
 </script>
@@ -359,14 +359,29 @@
                 aria-haspopup="true"
                 on:focus={evt=> dotInteraction(index, evt)}
                 on:blur={evt=> dotInteraction(index, evt)}
+                on:click={evt=> dotInteraction(index, evt)}
+                on:keyup={evt=> dotInteraction(index, evt)}
             />
+
+            <!-- { console.log("inside each loop: ", selectedCommits) } -->
             <!-- FUTURE EXPLORATION- MAKE A FUNCTION THAT CHANGES THE COLOR BASED ON TIME OF DAY 
                     I.E. MORNING IS ORANGE AND NIGHT IS BLUE -->
         {/each}
         </g>
     </svg>
 
-    <p>{hasSelection ? selectedCommits.length : "No"} commits selected</p>
+    {console.log(selectedCommits.length)}
+    {console.log("hasSelection: ", hasSelection)}
+    <!-- hasSelection is undefined for some reason, not updating in the brushed function!! -->
+    
+    {#if selectedCommits.length === 1}
+        <p>{hasSelection ? selectedCommits.length : "No"} commit selected</p>
+    {/if}
+    
+    {#if selectedCommits.length !== 1}
+        <p>{hasSelection ? selectedCommits.length : "No"} commits selected</p>
+    {/if}
+
     <dl class="meta_legend">
         <Pie data={languageBreakdownArray}></Pie>
     </dl>
