@@ -1,6 +1,7 @@
 <script>
     import * as d3 from "d3";
     import Pie from "$lib/Pie.svelte";
+    import CommitScatterplot from "../meta/Scatterplot.svelte";
     import { onMount } from "svelte";
     import {
         computePosition,
@@ -10,47 +11,31 @@
 
     let data = [];
     let commits = [];
-    let width = 900, height = 475; // changed the height of the graph from 600 to 450
-    let yScale = d3.scaleLinear();
-    let xScale = d3.scaleTime();
-    let rScale = d3.scaleSqrt();
-    let xAxis, yAxis;
-    let yAxisGridlines;
-    let hoveredIndex = -1;
-    let tooltipPosition = {x:0, y:0};
-    let commitTooltip;
-    let svg;
-    let brushedSelection;
+    // let svg;
     let selectedCommits = [];
-    let hasSelection = undefined;
-    let selectedLines;
     let languageBreakdown;
     let languageBreakdownArray;
+    let commitProgress = 100;
+    let commitMaxTime; 
+    let timeScale = d3.scaleTime();
+    let filteredCommits;
+    let brushedSelection;
+    let filteredCommitsLines;
+    let hasSelection = undefined;
     const format = d3.format(".1~%");
 
     // $: selectedCommits = brushedSelection ? commits.filter(isCommitSelected) : []; 
-    $: hoveredCommit = commits[hoveredIndex]?? {};   
+    // $: hoveredCommit = filteredCommits[hoveredIndex]?? {};   
     $: hasSelection = brushedSelection || selectedCommits.length > 0;
     // $: selectedLines = (hasSelection ? selectedCommits: commits).flatMap(d => d.lines);
-    $: selectedLines = hasSelection ? data.filter((d) => selectedCommits.map(commit => commit.id).includes(d.commit)) : data;
-
-    // defining axes
-    let margin = {top: 10, right: 10, bottom: 30, left:20};
-    let usableArea = {
-        top: margin.top,
-        bottom: height - margin.bottom,
-        left: margin.left,
-        right: width - margin.right
-    };
-    usableArea.width = usableArea.right - usableArea.left;
-    usableArea.height = usableArea.bottom - usableArea.top;
-
-    // creating axis on page
-    $: {
-        d3.select(xAxis).call(d3.axisBottom(xScale));
-        d3.select(yAxis).call(d3.axisLeft(yScale).tickFormat(d => String(d % 24).padStart(2, "0") + ":00"));
-        d3.select(yAxisGridlines).call(d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width));
-    }
+    // $: selectedLines = hasSelection ? data.filter((d) => selectedCommits.map(commit => commit.id).includes(d.commit)) : data;
+    // $: filteredCommitsLines = data.filter ((d) => d.datetime < commitMaxTime);
+    // $: filteredCommits = commits.filter((commit) =>  commit.datetime < commitMaxTime);
+    $: timeScale = timeScale.domain(d3.extent(commits, d => d.datetime)).range([0, 100]);
+    $: commitMaxTime = timeScale.invert(commitProgress);
+    $: commits = d3.sort(commits, d => -d.totalLines);
+    $: filteredCommits = commits.filter((commit) =>  commit.datetime < commitMaxTime);
+    $: filteredCommitsLines = data.filter ((d) => d.datetime < commitMaxTime);
 
     onMount(async() => {
         data = await d3.csv("loc.csv", row=> ({
@@ -85,131 +70,20 @@
             return ret;
 
         });
-
-    $: commits = d3.sort(commits, d => -d.totalLines);
-    $: yScale = yScale.domain([0, 24]).range([usableArea.bottom, usableArea.top]); // might need to switch values currently domain = [0, height], range = [0, 24] 
-    $: xScale = xScale.domain(d3.extent(commits, d => d.datetime)).range( [usableArea.left, usableArea.right] ).nice();
-    $: rScale = rScale.domain(d3.extent(commits, d => d.totalLines)).range([5, 30]);
-
-    $: fileLengths = d3.rollups(data, v => d3.max(v, v => v.line), d => d.file);
+    
+    $: fileLengths = d3.rollups(filteredCommitsLines, v => d3.max(v, v => v.line), d => d.file);
     $: avgFileLength = d3.mean(fileLengths, f => f[1]);
-    $: workByPeriod = d3.rollups(data, v=> v.length, d => d.datetime.toLocaleString("en", {dayPeriod: "short"}) );
-    $: languageBreakdown = d3.rollups(selectedLines, v=> v.length, d => d.type);    
+    $: workByPeriod = d3.rollups(filteredCommitsLines, v=> v.length, d => d.datetime.toLocaleString("en", {dayPeriod: "long"}) );
+    
+    // BUG WITH NOT UPDATING THE PIE CHART WHEN SELECTING COMMITS OR CLICKING ON A SINGLE COMMIT 
+    $: languageBreakdown = d3.rollups(filteredCommitsLines, v=> v.length, d => d.type);    
+    
     $: languageBreakdownArray = Array.from(languageBreakdown).map( ([language, lines]) => ({label: language, value:lines}) );
     $: maxPeriod = d3.greatest(workByPeriod, (d) => d[1])?.[0];
-    $: {
-        d3.select(svg).call(d3.brush().on("start brush end", brushed));
-        d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
-    }
-
-    async function dotInteraction (index, evt){
-        let hoveredDot = evt.target;
-        
-        if (evt.type === "mouseenter" || evt.type === "focus")
-        {
-            hoveredIndex = index;
-            tooltipPosition = await computePosition(hoveredDot, commitTooltip, {
-                strategy: "fixed",
-                middleware: [
-                    offset(20),
-                    autoPlacement()
-                ],
-            });
-        }
-
-        else if (evt.type === "mouseleave" || evt.type === "blur")
-        {
-            hoveredIndex = -1;
-        }
-
-        else if ( (evt.type === "click") || ( (evt.type === "keyup") && (evt.key === "Enter") ) )
-        {
-            // changes selected commits to be just the individual commit clicked on
-            selectedCommits = [ commits[index] ]; 
-
-            // BUG, SELECTEDCOMMITS IS NOT BEING UPDATED GLOBALLY
-            // console.log("selectedCommits ", selectedCommits);
-        }
-    }
-
-    function brushed (evt)
-    {
-        let brushedSelection = evt.selection;
-
-        selectedCommits = !brushedSelection ? [] : commits.filter(commit => {
-            let top_left = {x: brushedSelection[0][0], y: brushedSelection[0][1]};
-            let bottom_right = {x: brushedSelection[1][0], y: brushedSelection[1][1]};
-
-            let commit_x_coord = xScale(commit.datetime);
-            let commit_y_coord = yScale(commit.hourFrac);
-
-            if ((commit_x_coord >= top_left.x) && (commit_y_coord >= top_left.y) && 
-                (commit_x_coord <= bottom_right.x) && (commit_y_coord <= bottom_right.y))
-            {
-                console.log("I have been selected, inside brush function!!");
-                hasSelection = true;
-                return true;
-            }
-            hasSelection = undefined;
-            return false;
-        });
-    }
-
-    function isCommitSelected(commit)
-    {
-        return selectedCommits.includes(commit);
-    }
     
 </script>
 
 <style>
-
-@keyframes marching-ants {
-        to{
-            stroke-dashoffset: -8;
-        }
-    }
-
-    svg :global(.selection){
-        /* overflow: visible;
-        margin:50px; */
-        fill-opacity: 10%;
-        stroke: black;
-        stroke-opacity: 70%;
-        stroke-dasharray: 5 3;
-        animation: marching-ants 2s linear infinite;
-    }
-
-    svg{
-        margin:50px;
-    }
-
-    dl.info
-    {
-        display: grid;
-        grid-template-columns: auto 1fr;
-        background-color: oklch(100% 0% 0 / 80%);
-        box-shadow: 5px 5px 5px lightslategrey;
-        border-radius: 5%;
-        backdrop-filter: blur(10px);
-        padding:10px;
-
-        transition-duration: 500ms;
-        transition-property: opacity, visibility;
-
-        &[hidden]:not(:hover, :focus-within){
-            opacity: 0;
-            visibility: hidden;
-        }
-    }
-
-    .tooltip{
-        position: fixed;
-        margin:15px;
-        /* top: 1em; */
-    }
-
-
     h2.meta{
         font-size: 50px;
         font-family: 'Segoe UI';
@@ -220,6 +94,8 @@
         grid-template-columns: auto;
         grid-template-rows: auto;
         font-family: 'Segoe UI';
+        padding-top: 0px;
+        margin-top: 0px;
 
         dt{
             grid-row: 1;
@@ -243,31 +119,6 @@
         font-family: 'Segoe UI';
     }
 
-    .gridlines{
-        stroke-opacity: 0.2;
-    }
-    
-    .dots{
-
-        circle.selected{
-            fill: rgb(228, 24, 24)
-        }
-
-        circle{
-            transition: 200ms;
-            transform-origin: center;
-            transform-box: fill-box;
-            /* fill-opacity: 100%;  */
-            /* HOW DO YOU CHANGE THE OPACITY OF BIGGER DOTS */
-
-            &:hover
-            {
-                transform: scale(1.5);
-                
-            }
-        }
-    }
-
     .meta_legend{
         display: grid;
 
@@ -287,23 +138,25 @@
     }
     
 </style>
-<h2 class="meta">Summary</h2>
-
-<h2 style="margin-top: 3rem">Commits by time of Day</h2>
+<label class="filtering">
+    <p>Show commits until:</p> 
+    <input class="slider" type="range" min="1" max="100" bind:value={commitProgress}>
+    <time class="timeLabel">{commitMaxTime.toLocaleString("en", {dateStyle: "long", timeStyle: "short"})}</time> 
+</label>
 
 <div class="meta_container">
     <dl class="stats">
         <dt>COMMITS</dt>
-        <dd>{commits.length}</dd>
+        <dd>{filteredCommits.length}</dd>
     
         <dt>FILES</dt>
-        <dd>{d3.group(data, d=> d.file).size}</dd>
+        <dd>{d3.group(filteredCommitsLines, d=> d.file).size}</dd>
     
         <dt>MAX DEPTH</dt>
-        <dd>{d3.max(data, d => d.depth)}</dd>
+        <dd>{d3.max(filteredCommitsLines, d => d.depth)}</dd>
         
         <dt>Total <abbr title="Lines of Code"> LOC</abbr></dt>
-        <dd>{data.length}</dd>
+        <dd>{filteredCommitsLines.length}</dd>
     
         <!-- <dt>AVG FILE DEPTH</dt>
         <dd>{parseInt(d3.mean(data, d => d.depth))}</dd> -->
@@ -312,67 +165,11 @@
         <dd>{parseInt(avgFileLength)}</dd>
     
         <dt>MAX LINES</dt>
-        <dd>{d3.max(data, d => d.line)}</dd>    
+        <dd>{d3.max(filteredCommitsLines, d => d.line)}</dd>    
     </dl>
     
-    <dl id="commit-tooltip" class="info tooltip" 
-        hidden={hoveredIndex === -1}
-        bind:this={commitTooltip}
-        style="top:{tooltipPosition.y}px; left:{tooltipPosition.x}px">
-        <dt>Commit</dt>
-        <dd> <a href="{ hoveredCommit.url}" target="_blank"> { hoveredCommit.id }</a> </dd>
-    
-        <dt>Date</dt>
-        <dd>{ hoveredCommit.datetime?.toLocaleString("en", {date: "full"}) }</dd>
-    
-        <dt>Time</dt>
-        <dd>{ hoveredCommit.time }</dd>
-    
-        <dt>Author</dt>
-        <dd>{ hoveredCommit.author }</dd>
-    
-        <dt>Lines</dt>
-        <dd>{ hoveredCommit.totalLines }</dd>
-
-        <!-- <dt>Language</dt>
-        <dd>{ hoveredCommit.language }</dd> -->
-    </dl>
-    <svg viewBox="0 0 {width} {height}" bind:this={svg}>
-        <g transform="translate(0, {usableArea.bottom})" bind:this={xAxis} />
-        <g class="gridlines" transform="translate({usableArea.left}, 0)" bind:this={yAxisGridlines} />
-        <g transform="translate({usableArea.top})" bind:this={yAxis}/>
-        
-        <g class="dots">
-        {#each commits as commit, index}
-            <circle 
-                class:selected={isCommitSelected(commit)}
-                cx={ xScale(commit.datetime) }
-                cy={ yScale(commit.hourFrac) }
-                r= { rScale(commit.totalLines) }
-                fill="#B19CD9"
-                fill-opacity= {(105 - rScale(commit.totalLines))/100}
-                on:mouseenter= {evt=> dotInteraction(index, evt)}
-                on:mouseleave={evt => dotInteraction(index, evt)}
-                tabindex="0"
-                aria-describedby="commit-tooltip"
-                role="tooltip"
-                aria-haspopup="true"
-                on:focus={evt=> dotInteraction(index, evt)}
-                on:blur={evt=> dotInteraction(index, evt)}
-                on:click={evt=> dotInteraction(index, evt)}
-                on:keyup={evt=> dotInteraction(index, evt)}
-            />
-
-            <!-- { console.log("inside each loop: ", selectedCommits) } -->
-            <!-- FUTURE EXPLORATION- MAKE A FUNCTION THAT CHANGES THE COLOR BASED ON TIME OF DAY 
-                    I.E. MORNING IS ORANGE AND NIGHT IS BLUE -->
-        {/each}
-        </g>
-    </svg>
-
-    {console.log(selectedCommits.length)}
-    {console.log("hasSelection: ", hasSelection)}
-    <!-- hasSelection is undefined for some reason, not updating in the brushed function!! -->
+    <h2 style="margin-top: 3rem">Commits by time of Day</h2>
+    <CommitScatterplot commits={filteredCommits} bind:selectedCommits={selectedCommits} />
     
     {#if selectedCommits.length === 1}
         <p>{hasSelection ? selectedCommits.length : "No"} commit selected</p>
@@ -383,9 +180,9 @@
     {/if}
 
     <dl class="meta_legend">
+        <!-- {console.log("selectedCommits: ", selectedCommits)} -->
+        <!-- {console.log("languageBreakdownArray: ", languageBreakdownArray)} -->
         <Pie data={languageBreakdownArray}></Pie>
     </dl>
-    
-    
 </div>
 
