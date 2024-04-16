@@ -13,8 +13,7 @@
         pieData = data.map(d => ({...d}) );
         arcData = sliceGenerator(data);
         arcs = arcData.map(d => arcGenerator(d));
-        console.log("arcData: ", arcData);
-
+        // console.log("arcData: ", arcData);
         pieData = pieData.map( (d, i) =>  ({...d, ...arcData[i], arc: arcs[i]}) );
     }
     
