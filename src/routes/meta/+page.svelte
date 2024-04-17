@@ -4,6 +4,7 @@
     import CommitScatterplot from "./Scatterplot.svelte";
     import FileLines from "./FileLines.svelte";
     import { onMount } from "svelte";
+    import Scrolly from "svelte-scrolly";
 
     let data = [];
     let commits = [];
@@ -26,6 +27,7 @@
     $: commits = d3.sort(commits, d => -d.totalLines);
     $: filteredCommits = commits.filter((commit) =>  commit.datetime < commitMaxTime);
     $: filteredLines = data.filter((d) => d.datetime < commitMaxTime);
+    // $: filteredLines = selectedCommits.length === 0 ? filteredLines : filteredLines.filter((line) => line.id i);
 
     onMount(async() => {
         data = await d3.csv("loc.csv", row=> ({
@@ -66,7 +68,11 @@
     $: workByPeriod = d3.rollups(filteredLines, v=> v.length, d => d.datetime.toLocaleString("en", {dayPeriod: "long"}) );
     
     // BUG WITH NOT UPDATING THE PIE CHART WHEN SELECTING COMMITS OR CLICKING ON A SINGLE COMMIT 
-    $: languageBreakdown = d3.rollups(filteredLines, v=> v.length, d => d.type);    
+    // $: languageBreakdown = selectedCommits.length === 0 ? d3.rollups(filteredLines, v=> v.length, d => d.type) : d3.rollups(selectedCommits, v=> v.length, d => d.type);
+    // $: console.log("Selected commits: ", selectedCommits);
+    $: languageBreakdown = d3.rollups(filteredLines, v=> v.length, d => d.type);   
+    $: console.log("languageBreakdown", languageBreakdown);
+    // $: console.log("filteredLines", filteredLines); 
     
     $: languageBreakdownArray = Array.from(languageBreakdown).map( ([language, lines]) => ({label: language, value:lines}) );
     $: maxPeriod = d3.greatest(workByPeriod, (d) => d[1])?.[0];
@@ -74,6 +80,10 @@
 </script>
 
 <style>
+    :global(body){
+        max-width: min(120ch, 80vw);
+    }
+    
     h2.meta{
         font-size: 50px;
         font-family: 'Segoe UI';
@@ -142,15 +152,15 @@
         grid-column: 2;
         text-align: right;
     }
+   
     
 </style>
-<label class="filtering">
+
+<!-- <label class="filtering">
     <p>Show commits until:</p> 
     <input class="slider" type="range" min="1" max="100" bind:value={commitProgress}>
     <time class="timeLabel">{commitMaxTime.toLocaleString("en", {dateStyle: "long", timeStyle: "short"})}</time> 
-</label>
-
-<FileLines lines={filteredLines} colors={colors}/>
+</label> -->
 
 <div class="meta_container">
     <dl class="stats">
@@ -166,31 +176,69 @@
         <dt>Total <abbr title="Lines of Code"> LOC</abbr></dt>
         <dd>{filteredLines.length}</dd>
     
-        <!-- <dt>AVG FILE DEPTH</dt>
-        <dd>{parseInt(d3.mean(data, d => d.depth))}</dd> -->
-    
         <dt>AVG FILE LENGTH</dt>
         <dd>{parseInt(avgFileLength)}</dd>
     
         <dt>MAX LINES</dt>
         <dd>{d3.max(filteredLines, d => d.line)}</dd>    
     </dl>
-    
-    <h2 style="margin-top: 3rem">Commits by time of Day</h2>
-    <CommitScatterplot commits={filteredCommits} bind:selectedCommits={selectedCommits} />
-    
-    {#if selectedCommits.length === 1}
-        <p>{hasSelection ? selectedCommits.length : "No"} commit selected</p>
-    {/if}
-    
-    {#if selectedCommits.length !== 1}
-        <p>{hasSelection ? selectedCommits.length : "No"} commits selected</p>
-    {/if}
 
-    <dl class="meta_legend">
-        <!-- {console.log("selectedCommits: ", selectedCommits)} -->
-        <!-- {console.log("languageBreakdownArray: ", languageBreakdownArray)} -->
-        <Pie data={languageBreakdownArray} fillColors={colors}></Pie>
-    </dl>
 </div>
+
+<Scrolly bind:progress={ commitProgress} --scrolly-layout="viz-first" --scrolly-viz-width=".5fr">
+    {#each commits as commit, index}
+        <p>
+            On {commit.datetime.toLocaleString("en", {dateStyle: "full", timeStyle: "short"} )},
+            I made <a href="{commit.url}" target="_blank">{index > 0 ? 'another glorious commit' : 'my first commit'}</a>.
+            I edited {commit.totalLines} lines for this commit.
+            Then I looked over all I had made, and I saw that it was very good.
+        </p>
+    {/each}
+
+    <svelte:fragment slot="viz" --layout="viz story">
+        <h2 style="margin-top: 3rem">Commits by time of Day</h2>
+        <CommitScatterplot commits={filteredCommits} bind:selectedCommits={selectedCommits} />
+        
+        {#if selectedCommits.length === 1}
+            <p>{hasSelection ? selectedCommits.length : "No"} commit selected</p>
+        {/if}
+        
+        {#if selectedCommits.length !== 1}
+            <p>{hasSelection ? selectedCommits.length : "No"} commits selected</p>
+        {/if}
+    
+        <dl class="meta_legend">
+            <Pie data={languageBreakdownArray} fillColors={colors}></Pie>
+        </dl>
+            
+    </svelte:fragment>
+</Scrolly>
+
+<Scrolly bind:progress={ commitMaxTime } --scrolly-layout="viz-first"
+throttle={1000} debounce={500}>
+    {#each commits as commit, index}
+        <p>
+            On {commit.datetime.toLocaleString("en", {dateStyle: "full", timeStyle: "short"} )},
+            I made <a href="{commit.url}" target="_blank">{index > 0 ? 'another glorious commit' : 'my first commit'}</a>.
+            I edited {commit.totalLines} lines for this commit.
+            Then I looked over all I had made, and I saw that it was very good.
+        </p>
+    {/each}
+    <svelte:fragment slot="viz">
+        <FileLines lines={filteredLines} colors={colors}/>
+
+    </svelte:fragment>
+</Scrolly>
+
+<!-- ERRORS TO FIX, 
+- VISUALIZATION IS UNDERNEATH THE NARRATIVE SCROLLYTELLING
+- PIE CHART IS NOT UPDATING BASED ON THE SELECTED COMMIT(S)
+- THE SECOND SCROLLY IS NOT SHOWING THE THIRD VISUALIZATION AT ALL
+- POTENTIALLY, THE PIE CHART WEDGES TRANSITIONING -->
+
+
+
+
+    
+    
 
