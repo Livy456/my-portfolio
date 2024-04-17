@@ -21,9 +21,9 @@
 
     <img src={p.image}>
     <dl class="project_description">
-        <time>c. {p.year}</time>
+        <time style="color: gray">c. {p.year}</time>
         <p>{p.description}</p> 
-        <a class="project_url" href={p.url} target="_blank">Link to the Project</a>
+        <a style="color:steelblue " class="project_url" href={p.url} target="_blank">Link to the Project</a>
     </dl>
 </article>
 

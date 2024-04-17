@@ -1,17 +1,12 @@
 <script>
     import * as d3 from "d3";
     import Pie from "$lib/Pie.svelte";
-    import CommitScatterplot from "../meta/Scatterplot.svelte";
+    import CommitScatterplot from "./Scatterplot.svelte";
+    import FileLines from "./FileLines.svelte";
     import { onMount } from "svelte";
-    import {
-        computePosition,
-        autoPlacement,
-        offset
-    } from '@floating-ui/dom';
 
     let data = [];
     let commits = [];
-    // let svg;
     let selectedCommits = [];
     let languageBreakdown;
     let languageBreakdownArray;
@@ -20,22 +15,17 @@
     let timeScale = d3.scaleTime();
     let filteredCommits;
     let brushedSelection;
-    let filteredCommitsLines;
+    let filteredLines;
     let hasSelection = undefined;
     const format = d3.format(".1~%");
-
-    // $: selectedCommits = brushedSelection ? commits.filter(isCommitSelected) : []; 
-    // $: hoveredCommit = filteredCommits[hoveredIndex]?? {};   
+    let colors = d3.scaleOrdinal(d3.schemeTableau10);
+  
     $: hasSelection = brushedSelection || selectedCommits.length > 0;
-    // $: selectedLines = (hasSelection ? selectedCommits: commits).flatMap(d => d.lines);
-    // $: selectedLines = hasSelection ? data.filter((d) => selectedCommits.map(commit => commit.id).includes(d.commit)) : data;
-    // $: filteredCommitsLines = data.filter ((d) => d.datetime < commitMaxTime);
-    // $: filteredCommits = commits.filter((commit) =>  commit.datetime < commitMaxTime);
     $: timeScale = timeScale.domain(d3.extent(commits, d => d.datetime)).range([0, 100]);
     $: commitMaxTime = timeScale.invert(commitProgress);
     $: commits = d3.sort(commits, d => -d.totalLines);
     $: filteredCommits = commits.filter((commit) =>  commit.datetime < commitMaxTime);
-    $: filteredCommitsLines = data.filter ((d) => d.datetime < commitMaxTime);
+    $: filteredLines = data.filter((d) => d.datetime < commitMaxTime);
 
     onMount(async() => {
         data = await d3.csv("loc.csv", row=> ({
@@ -71,12 +61,12 @@
 
         });
     
-    $: fileLengths = d3.rollups(filteredCommitsLines, v => d3.max(v, v => v.line), d => d.file);
+    $: fileLengths = d3.rollups(filteredLines, v => d3.max(v, v => v.line), d => d.file);
     $: avgFileLength = d3.mean(fileLengths, f => f[1]);
-    $: workByPeriod = d3.rollups(filteredCommitsLines, v=> v.length, d => d.datetime.toLocaleString("en", {dayPeriod: "long"}) );
+    $: workByPeriod = d3.rollups(filteredLines, v=> v.length, d => d.datetime.toLocaleString("en", {dayPeriod: "long"}) );
     
     // BUG WITH NOT UPDATING THE PIE CHART WHEN SELECTING COMMITS OR CLICKING ON A SINGLE COMMIT 
-    $: languageBreakdown = d3.rollups(filteredCommitsLines, v=> v.length, d => d.type);    
+    $: languageBreakdown = d3.rollups(filteredLines, v=> v.length, d => d.type);    
     
     $: languageBreakdownArray = Array.from(languageBreakdown).map( ([language, lines]) => ({label: language, value:lines}) );
     $: maxPeriod = d3.greatest(workByPeriod, (d) => d[1])?.[0];
@@ -136,6 +126,22 @@
             grid-row: 2;
         }
     }
+
+    .filtering{
+        display: grid;
+        grid-template-columns: 2.5fr 12fr;
+        grid-template-rows: 1fr 1fr;
+        margin-top:25px;
+    }
+
+    .slider{
+        flex: 1;
+    }
+
+    .timeLabel{
+        grid-column: 2;
+        text-align: right;
+    }
     
 </style>
 <label class="filtering">
@@ -144,19 +150,21 @@
     <time class="timeLabel">{commitMaxTime.toLocaleString("en", {dateStyle: "long", timeStyle: "short"})}</time> 
 </label>
 
+<FileLines lines={filteredLines} colors={colors}/>
+
 <div class="meta_container">
     <dl class="stats">
         <dt>COMMITS</dt>
         <dd>{filteredCommits.length}</dd>
     
         <dt>FILES</dt>
-        <dd>{d3.group(filteredCommitsLines, d=> d.file).size}</dd>
+        <dd>{d3.group(filteredLines, d=> d.file).size}</dd>
     
         <dt>MAX DEPTH</dt>
-        <dd>{d3.max(filteredCommitsLines, d => d.depth)}</dd>
+        <dd>{d3.max(filteredLines, d => d.depth)}</dd>
         
         <dt>Total <abbr title="Lines of Code"> LOC</abbr></dt>
-        <dd>{filteredCommitsLines.length}</dd>
+        <dd>{filteredLines.length}</dd>
     
         <!-- <dt>AVG FILE DEPTH</dt>
         <dd>{parseInt(d3.mean(data, d => d.depth))}</dd> -->
@@ -165,7 +173,7 @@
         <dd>{parseInt(avgFileLength)}</dd>
     
         <dt>MAX LINES</dt>
-        <dd>{d3.max(filteredCommitsLines, d => d.line)}</dd>    
+        <dd>{d3.max(filteredLines, d => d.line)}</dd>    
     </dl>
     
     <h2 style="margin-top: 3rem">Commits by time of Day</h2>
@@ -182,7 +190,7 @@
     <dl class="meta_legend">
         <!-- {console.log("selectedCommits: ", selectedCommits)} -->
         <!-- {console.log("languageBreakdownArray: ", languageBreakdownArray)} -->
-        <Pie data={languageBreakdownArray}></Pie>
+        <Pie data={languageBreakdownArray} fillColors={colors}></Pie>
     </dl>
 </div>
 

@@ -1,15 +1,13 @@
 <script>
     import * as d3 from "d3";
-    import { onMount } from "svelte";
     import {
         computePosition,
         autoPlacement,
         offset
     } from '@floating-ui/dom';
     export let commits = [];
+    export let selectedCommits = [];
 
-    // let data = [];
-    // let commits = [];
     let width = 900, height = 475; // changed the height of the graph from 600 to 450
     let yScale = d3.scaleLinear();
     let xScale = d3.scaleTime();
@@ -21,7 +19,6 @@
     let commitTooltip;
     let svg;
     let brushedSelection;
-    let selectedCommits = [];
     let hasSelection = undefined;
     let hoveredCommit;
     const format = d3.format(".1~%");
@@ -57,8 +54,6 @@
         d3.select(svg).call(d3.brush().on("start brush end", brushed));
         d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
     }
-
-    $: console.log("commits: ", commits);
 
     async function dotInteraction (index, evt){
         let hoveredDot = evt.target;
@@ -245,16 +240,6 @@
         }
     }
 
-    .filtering{
-        display: grid;
-        grid-template-columns: 2.5fr 12fr;
-        grid-template-rows: 1fr 1fr;
-        margin-top:25px;
-    }
-
-    .slider{
-        flex: 1;
-    }
 </style>
 
 <div class="meta_container">
@@ -305,7 +290,6 @@
                 on:click={evt=> dotInteraction(index, evt)}
                 on:keyup={evt=> dotInteraction(index, evt)}
             />
-            {console.log("commit: ", commit)}
 
             <!-- FUTURE EXPLORATION- MAKE A FUNCTION THAT CHANGES THE COLOR BASED ON TIME OF DAY 
                     I.E. MORNING IS ORANGE AND NIGHT IS BLUE -->

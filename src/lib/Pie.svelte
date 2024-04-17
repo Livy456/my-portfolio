@@ -2,9 +2,10 @@
     import * as d3 from 'd3';
     export let data = [];
     export let selectedIndex = -1;
+    export let fillColors = d3.scaleOrdinal(d3.schemeTableau10);
     
     // returns a function that uses index to produce a color
-    let fillColors = d3.scaleOrdinal(d3.schemeTableau10); 
+    // let fillColors = d3.scaleOrdinal(d3.schemeTableau10); 
     let sliceGenerator = d3.pie().value(d => d.value);
     let pieData;
     $:{
@@ -13,7 +14,6 @@
         pieData = data.map(d => ({...d}) );
         arcData = sliceGenerator(data);
         arcs = arcData.map(d => arcGenerator(d));
-        // console.log("arcData: ", arcData);
         pieData = pieData.map( (d, i) =>  ({...d, ...arcData[i], arc: arcs[i]}) );
     }
     
@@ -116,7 +116,7 @@
             --start-angle: { d.startAngle }rad;
             --end-angle: { d.endAngle }rad;"
             
-            fill= {fillColors(d.label)} 
+            fill= {fillColors(d.id ?? d.label) } 
             tabindex="0"
             aria-label="Pie Chart"
             role= "button"
