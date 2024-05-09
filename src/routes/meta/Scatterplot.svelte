@@ -9,9 +9,9 @@
     export let selectedCommits = [];
 
     let width = 900, height = 475; // changed the height of the graph from 600 to 450
-    let yScale = d3.scaleLinear();
-    let xScale = d3.scaleTime();
-    let rScale = d3.scaleSqrt();
+    // let yScale = d3.scaleLinear();
+    // let xScale = d3.scaleTime();
+    // let rScale = d3.scaleSqrt();
     let xAxis, yAxis;
     let yAxisGridlines;
     let hoveredIndex = -1;
@@ -19,11 +19,10 @@
     let commitTooltip;
     let svg;
     let brushedSelection;
-    let hasSelection = undefined;
-    let hoveredCommit;
+    // let hasSelection = undefined;
+    // let hoveredCommit;
     const format = d3.format(".1~%");
 
-    $: selectedCommits = brushedSelection ? commits.filter(isCommitSelected) : []; 
     $: hoveredCommit = commits[hoveredIndex]?? {};   
     $: hasSelection = brushedSelection || selectedCommits.length > 0;
     
@@ -45,10 +44,9 @@
         d3.select(yAxisGridlines).call(d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width));
     }
 
-    $: commits = d3.sort(commits, d => -d.totalLines);
-    $: yScale = yScale.domain([0, 24]).range([usableArea.bottom, usableArea.top]); // might need to switch values currently domain = [0, height], range = [0, 24] 
-    $: xScale = xScale.domain(d3.extent(commits, d => d.datetime)).range( [usableArea.left, usableArea.right] ).nice();
-    $: rScale = rScale.domain(d3.extent(commits, d => d.totalLines)).range([5, 30]);
+    $: yScale = d3.scaleLinear().domain([0, 24]).range([usableArea.bottom, usableArea.top]); // might need to switch values currently domain = [0, height], range = [0, 24] 
+    $: xScale = d3.scaleTime().domain(d3.extent(commits, d => d.datetime)).range( [usableArea.left, usableArea.right] ).nice();
+    $: rScale = d3.scaleSqrt().domain(d3.extent(commits, d => d.totalLines)).range([5, 30]);
     
     $: {
         d3.select(svg).call(d3.brush().on("start brush end", brushed));
@@ -75,7 +73,8 @@
             hoveredIndex = -1;
         }
         
-        else if ( (evt.type === "click") || ( (evt.type === "keyup") && (evt.key === "Enter") ) )
+        else if ( (evt.type === "click") || (evt.type === "brush") ||
+                ( (evt.type === "keyup") && (evt.key === "Enter") ) )
         {
             // changes selected commits to be just the individual commit clicked on
             selectedCommits = [ commits[index] ];
@@ -85,12 +84,18 @@
     function brushed (evt)
     {
         let brushedSelection = evt.selection;
+        // console.log("evt", evt);
+
         selectedCommits = !brushedSelection ? [] : commits.filter(commit => {
             let top_left = {x: brushedSelection[0][0], y: brushedSelection[0][1]};
             let bottom_right = {x: brushedSelection[1][0], y: brushedSelection[1][1]};
 
             let commit_x_coord = xScale(commit.datetime);
             let commit_y_coord = yScale(commit.hourFrac);
+
+            // console.log("commit x: ", commit_x_coord, ", commit y: ", commit_y_coord);
+            // console.log("brushed top left: ", top_left);
+            // console.log("brushed bottom right: ", bottom_right);
 
             if ((commit_x_coord >= top_left.x) && (commit_y_coord >= top_left.y) && 
                 (commit_x_coord <= bottom_right.x) && (commit_y_coord <= bottom_right.y))
@@ -99,13 +104,15 @@
                 hasSelection = true;
                 return true;
             }
-            hasSelection = undefined;
+            
             return false;
         });
+
     }
 
     function isCommitSelected(commit)
     {
+        // console.log("is commit selected function: ", selectedCommits);
         return selectedCommits.includes(commit);
     }
     
@@ -206,8 +213,6 @@
             transition: 200ms;
             transform-origin: center;
             transform-box: fill-box;
-            /* fill-opacity: 100%;  */
-            /* HOW DO YOU CHANGE THE OPACITY OF BIGGER DOTS */
 
             &:hover
             {
@@ -268,7 +273,6 @@
         <g transform="translate(0, {usableArea.bottom})" bind:this={xAxis} />
         <g class="gridlines" transform="translate({usableArea.left}, 0)" bind:this={yAxisGridlines} />
         <g transform="translate({usableArea.top})" bind:this={yAxis}/>
-        
         <g class="dots">
         {#each commits as commit, index (commit.id)}
             <circle 
@@ -291,8 +295,6 @@
                 on:keyup={evt=> dotInteraction(index, evt)}
             />
 
-            <!-- FUTURE EXPLORATION- MAKE A FUNCTION THAT CHANGES THE COLOR BASED ON TIME OF DAY 
-                    I.E. MORNING IS ORANGE AND NIGHT IS BLUE -->
         {/each}
         </g>
     </svg>

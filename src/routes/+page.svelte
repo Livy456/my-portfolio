@@ -49,7 +49,7 @@ dl.home_page_stats{
         <p>Decoding...</p>
         
     {:then data} 
-        <section class="github stats">
+        <section class="github_stats">
             <!-- <p>The data is { JSON.stringify(data) }</p> -->
             <h2 style="font-family: garamond; font-size:30px;">My GitHub Stats</h2>
             <dl class="home_page_stats">

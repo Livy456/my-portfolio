@@ -7,6 +7,8 @@
     export let colors = d3.scaleOrdinal(d3.schemeTableau10);
     
     let files = [];
+    $:console.log("filtered lines: ", lines);
+
     $: {
         files = d3.groups(lines, d => d.file).map( ([name, lines]) => {
             return {name, lines};
@@ -19,6 +21,8 @@
     {
         return originalFlip;
     }
+
+    $: console.log("files: ", files);
 
 </script>
 
@@ -63,7 +67,7 @@ small{
 
 <dl class="files">
     {#each files as file (file.name)}
-        <div animate:flip={ {delay:10, duration:500}}>
+        <div animate:flip={ {delay:5, duration:50} }>
             <dt>
                 <code>{file.name}</code>
                 <small>{file.lines.length} lines</small>

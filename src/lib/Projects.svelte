@@ -10,7 +10,6 @@
     .project_url{
         color:black;
         background-color: none;
-
     }
 
 </style>

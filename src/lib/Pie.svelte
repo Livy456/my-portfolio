@@ -11,7 +11,7 @@
     let oldData = [];
     let wedges = {};
     let arcGenerator = d3.arc().innerRadius(0).outerRadius(50);
-
+    
     $:{
         let arcData;
         let arcs;
@@ -69,15 +69,21 @@
     } 
 
     function arc (wedge){
+        let transition = transitionArc(wedge);
+        if (!transition)
+        {
+            return;
+        }
+        
         // Calculations that will only be done once per element go here
         return{
             duration: transitionDuration,
             css: (t, u) => {
                 // t is a number between 0 and 1 that represents the transition progress; u is 1 - t
-                let wedge = this;
+                // let wedge = this;
                 // let label = Object.keys(wedges)[index]; 
-                let transition = transitionArc(wedge);
-                return `{transition.interpolator(transition.type === "out" ? u : t)}`;
+                
+                return `d: ${transition.interpolator(transition.type === "out" ? u : t)}`;
             }
         }
     }
@@ -132,7 +138,7 @@
         margin-block: 2em;
         /* Doesn't clip the shape even if it'd outside of viewbox */
         overflow: visible;
-        padding-bottom:25px;
+        /* padding-bottom:25px; */
     }
 
     svg:has(path:hover, path:focus-visible)
@@ -162,7 +168,7 @@
         align-items: center;
         flex: 1;
         display: flex;
-        gap: 60ch;
+        gap: 6ch;
     }
 
     span.swatch{
@@ -203,7 +209,7 @@
 
 <div class="container">
 
-    <svg viewBox= "-190 -55 100 100">
+    <svg viewBox= "-50 -50 100 100">
         {#each pieData as d, i (d.label)}
             <path 
             bind:this={ wedges[d.label] }
@@ -226,9 +232,7 @@
             <li style="--color: { fillColors(d.label) }">
                 <span class="swatch" class:selected={selectedIndex === index}></span>
                 {d.label} <em> ({d.value})</em>
-            
             </li>
-            
         {/each}
     </ul>
 </div>

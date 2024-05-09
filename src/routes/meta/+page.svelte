@@ -1,36 +1,30 @@
 <script>
     import * as d3 from "d3";
     import Pie from "$lib/Pie.svelte";
-    import CommitScatterplot from "./Scatterplot.svelte";
+    import Scatterplot from "./Scatterplot.svelte";
     import FileLines from "./FileLines.svelte";
     import { onMount } from "svelte";
     import Scrolly from "svelte-scrolly";
 
     let data = [];
-    let commits = [];
     let selectedCommits = [];
-    let languageBreakdown;
-    let languageBreakdownArray;
-    let commitProgress = 100;
-    let commitMaxTime; 
-    let timeScale = d3.scaleTime();
-    let filteredCommits;
+    let commitProgress = 50;
     let brushedSelection;
-    let filteredLines;
-    let hasSelection = undefined;
     const format = d3.format(".1~%");
     let colors = d3.scaleOrdinal(d3.schemeTableau10);
-  
-    $: hasSelection = brushedSelection || selectedCommits.length > 0;
-    $: timeScale = timeScale.domain(d3.extent(commits, d => d.datetime)).range([0, 100]);
-    $: commitMaxTime = timeScale.invert(commitProgress);
-    $: commits = d3.sort(commits, d => -d.totalLines);
-    $: filteredCommits = commits.filter((commit) =>  commit.datetime < commitMaxTime);
-    $: filteredLines = data.filter((d) => d.datetime < commitMaxTime);
-    // $: filteredLines = selectedCommits.length === 0 ? filteredLines : filteredLines.filter((line) => line.id i);
 
+    $: hasSelection = brushedSelection || selectedCommits.length > 0;
+    $: timeScale = d3.scaleTime().domain(d3.extent(commits, d => d.datetime)).range([0, 100]);
+    $: commitMaxTime = timeScale.invert(commitProgress);
+    $: lineMaxTime = timeScale.invert(commitProgress);
+    $: d3.sort(commits, d => -d.totalLines);
+    $: filteredCommits = commits.filter((commit) =>  commit.datetime < commitMaxTime);
+    $: selectedLines = (hasSelection ? selectedCommits: filteredCommits).flatMap((d) => d.lines);
+    $: filteredLines = selectedLines.filter( (d) => d.datetime < lineMaxTime);
+    // $: filteredLines = filteredCommits.length === 0 ? filteredCommits : filteredCommits.filter((line) => line.id);
+    
     onMount(async() => {
-        data = await d3.csv("loc.csv", row=> ({
+        data = await d3.csv("loc.csv", row => ({
             ...row,
             type: String(row.type),
             line: Number(row.line),
@@ -53,7 +47,7 @@
             };
 
             Object.defineProperty(ret, "lines", {
-                values: lines,
+                value: lines,
                 configurable: true,
                 writable: true,
                 enumerable: false
@@ -62,21 +56,15 @@
             return ret;
 
         });
-    
-    $: fileLengths = d3.rollups(filteredLines, v => d3.max(v, v => v.line), d => d.file);
-    $: avgFileLength = d3.mean(fileLengths, f => f[1]);
+
+    $: fileLengths = d3.rollups(filteredLines, f => d3.max(f, v => v.totalLines), d => d.file);
+    $: avgFileLength = d3.mean(fileLengths, d => d[1]);
     $: workByPeriod = d3.rollups(filteredLines, v=> v.length, d => d.datetime.toLocaleString("en", {dayPeriod: "long"}) );
-    
-    // BUG WITH NOT UPDATING THE PIE CHART WHEN SELECTING COMMITS OR CLICKING ON A SINGLE COMMIT 
-    // $: languageBreakdown = selectedCommits.length === 0 ? d3.rollups(filteredLines, v=> v.length, d => d.type) : d3.rollups(selectedCommits, v=> v.length, d => d.type);
-    // $: console.log("Selected commits: ", selectedCommits);
-    $: languageBreakdown = d3.rollups(filteredLines, v=> v.length, d => d.type);   
-    $: console.log("languageBreakdown", languageBreakdown);
-    // $: console.log("filteredLines", filteredLines); 
-    
-    $: languageBreakdownArray = Array.from(languageBreakdown).map( ([language, lines]) => ({label: language, value:lines}) );
+
+    $: languageBreakdown = d3.rollup(selectedLines, v => v.length, d => d.type);   
     $: maxPeriod = d3.greatest(workByPeriod, (d) => d[1])?.[0];
-    
+
+
 </script>
 
 <style>
@@ -152,15 +140,18 @@
         grid-column: 2;
         text-align: right;
     }
+
+    svg{
+
+    }
+
+    Scrolly{
+        padding-bottom:50px;
+        margin-bottom:50px;
+    }
    
     
 </style>
-
-<!-- <label class="filtering">
-    <p>Show commits until:</p> 
-    <input class="slider" type="range" min="1" max="100" bind:value={commitProgress}>
-    <time class="timeLabel">{commitMaxTime.toLocaleString("en", {dateStyle: "long", timeStyle: "short"})}</time> 
-</label> -->
 
 <div class="meta_container">
     <dl class="stats">
@@ -178,14 +169,13 @@
     
         <dt>AVG FILE LENGTH</dt>
         <dd>{parseInt(avgFileLength)}</dd>
-    
+        
         <dt>MAX LINES</dt>
         <dd>{d3.max(filteredLines, d => d.line)}</dd>    
     </dl>
-
 </div>
 
-<Scrolly bind:progress={ commitProgress} --scrolly-layout="viz-first" --scrolly-viz-width=".5fr">
+<Scrolly bind:progress={ commitProgress }>
     {#each commits as commit, index}
         <p>
             On {commit.datetime.toLocaleString("en", {dateStyle: "full", timeStyle: "short"} )},
@@ -195,9 +185,9 @@
         </p>
     {/each}
 
-    <svelte:fragment slot="viz" --layout="viz story">
+    <svelte:fragment slot="viz">
         <h2 style="margin-top: 3rem">Commits by time of Day</h2>
-        <CommitScatterplot commits={filteredCommits} bind:selectedCommits={selectedCommits} />
+        <Scatterplot commits={filteredCommits} bind:selectedCommits={selectedCommits} />
         
         {#if selectedCommits.length === 1}
             <p>{hasSelection ? selectedCommits.length : "No"} commit selected</p>
@@ -206,15 +196,13 @@
         {#if selectedCommits.length !== 1}
             <p>{hasSelection ? selectedCommits.length : "No"} commits selected</p>
         {/if}
+        
+        <Pie data={Array.from(languageBreakdown).map( ([language, lines]) => ({label: language, value: lines }) ) } fillColors={colors}></Pie>            
     
-        <dl class="meta_legend">
-            <Pie data={languageBreakdownArray} fillColors={colors}></Pie>
-        </dl>
-            
     </svelte:fragment>
 </Scrolly>
 
-<Scrolly bind:progress={ commitMaxTime } --scrolly-layout="viz-first"
+<Scrolly bind:progress={ commitProgress } --scrolly-layout="viz-first"
 throttle={1000} debounce={500}>
     {#each commits as commit, index}
         <p>
@@ -226,15 +214,8 @@ throttle={1000} debounce={500}>
     {/each}
     <svelte:fragment slot="viz">
         <FileLines lines={filteredLines} colors={colors}/>
-
     </svelte:fragment>
 </Scrolly>
-
-<!-- ERRORS TO FIX, 
-- VISUALIZATION IS UNDERNEATH THE NARRATIVE SCROLLYTELLING
-- PIE CHART IS NOT UPDATING BASED ON THE SELECTED COMMIT(S)
-- THE SECOND SCROLLY IS NOT SHOWING THE THIRD VISUALIZATION AT ALL
-- POTENTIALLY, THE PIE CHART WEDGES TRANSITIONING -->
 
 
 
