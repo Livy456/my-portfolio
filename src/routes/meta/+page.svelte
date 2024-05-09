@@ -138,12 +138,6 @@
         grid-column: 2;
         text-align: right;
     }
-
-    Scrolly{
-        padding-bottom:50px;
-        margin-bottom:50px;
-        /* padding-top: 100px; */
-    }
    
 </style>
 
@@ -180,7 +174,7 @@
     {/each}
 
     <svelte:fragment slot="viz">
-        <h2 style="margin-top: 3rem">Commits by time of Day</h2>
+        <h2>Commits by time of Day</h2>
         <Scatterplot commits={filteredCommits} bind:selectedCommits={selectedCommits} />
         
         {#if selectedCommits.length === 1}
