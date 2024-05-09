@@ -21,7 +21,6 @@
     $: filteredCommits = commits.filter((commit) =>  commit.datetime < commitMaxTime);
     $: selectedLines = (hasSelection ? selectedCommits: filteredCommits).flatMap((d) => d.lines);
     $: filteredLines = selectedLines.filter( (d) => d.datetime < lineMaxTime);
-    // $: filteredLines = filteredCommits.length === 0 ? filteredCommits : filteredCommits.filter((line) => line.id);
     
     onMount(async() => {
         data = await d3.csv("loc.csv", row => ({
@@ -63,7 +62,6 @@
 
     $: languageBreakdown = d3.rollup(selectedLines, v => v.length, d => d.type);   
     $: maxPeriod = d3.greatest(workByPeriod, (d) => d[1])?.[0];
-
 
 </script>
 
@@ -141,16 +139,12 @@
         text-align: right;
     }
 
-    svg{
-
-    }
-
     Scrolly{
         padding-bottom:50px;
         margin-bottom:50px;
+        /* padding-top: 100px; */
     }
    
-    
 </style>
 
 <div class="meta_container">

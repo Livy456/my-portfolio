@@ -1,13 +1,11 @@
 <script>
     import * as d3 from 'd3';
     import { flip as originalFlip} from "svelte/animate";
-    import { get } from 'svelte/store';
     import { scale } from 'svelte/transition';
     export let lines = {}; 
     export let colors = d3.scaleOrdinal(d3.schemeTableau10);
     
     let files = [];
-    $:console.log("filtered lines: ", lines);
 
     $: {
         files = d3.groups(lines, d => d.file).map( ([name, lines]) => {
@@ -21,8 +19,6 @@
     {
         return originalFlip;
     }
-
-    $: console.log("files: ", files);
 
 </script>
 
@@ -67,7 +63,7 @@ small{
 
 <dl class="files">
     {#each files as file (file.name)}
-        <div animate:flip={ {delay:5, duration:50} }>
+        <div animate:flip={ {delay:1, duration:500} }>
             <dt>
                 <code>{file.name}</code>
                 <small>{file.lines.length} lines</small>
