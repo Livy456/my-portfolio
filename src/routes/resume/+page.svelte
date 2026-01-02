@@ -46,4 +46,5 @@
             <p><strong>Community Service Organizer</strong>, <em>Baptist Church of All Nations</em>, Taunton, MA <br><time>Summers 2020, 2021, 2023</time></p>
             <li>Developed, organized, and led a school supplies distribution event with a local church and in conjunction with the local police department; distributed 200 backpacks to over 70 families with children in need</li>
         </section>
+        
     </div>

@@ -37,8 +37,8 @@ dl.home_page_stats{
 <h1> Olivia Dias</h1>
 <div class="home-page-container">
     
-    <img class="portfolio-img" src="images/SeniorPhoto.png" alt="This is me!" width="250px" height="350px"> 
-    <p class="biography">I am a Junior at MIT, studying Artificial Intelligence and Decision Making.</p>
+    <img class="portfolio-img" src="images/undergrad_headshot.jpg" alt="This is me!" width="250px" height="350px"> 
+    <p class="biography">I am an MEng at MIT, studying Artificial Intelligence and Decision Making.</p>
 </div>
 
 <!-- Adds github information to home page -->
