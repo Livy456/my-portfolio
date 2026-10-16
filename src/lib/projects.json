@@ -3,84 +3,70 @@
         "title": "Corporate Investor Data Analysis",
         "year": 2024,
         "image": "images/ProjectImg_Corp_Own_Analysis.png",
-        "description": "Performed an exploratory data analysis on Metropolitan Area Planning Council(MAPC) dataset which contained census information and corporate ownership rate for each neighborhood in the Boston area.", 
-        "url":"https://livy456.github.io/A2-Report/"
+        "description": "Performed an exploratory data analysis on Metropolitan Area Planning Council(MAPC) dataset which contained census information and corporate ownership rate for each neighborhood in the Boston area.",
+        "url": "https://livy456.github.io/A2-Report/"
     },
     {
         "title": "Interactive MapBox Visualization of BlueBike Stations",
-        "year":2024,
+        "year": 2024,
         "image": "images/MapboxBlueBike.png",
         "description": "I utilized mapbox to visualize the total traffic of blue bike stations. And allow the uers to be able to filter based on time of day.",
         "url": "https://livy456.github.io/bikewatching/"
     },
     {
         "title": "RL Computational Tool",
-        "year": 2023, 
+        "year": 2023,
         "image": "images/RAICA_Website.png",
         "description": "I made a website that hosts a self-driving game. I made this computational tool as a part of a research opportunity program to enable middle school and high school students learn about reinforcement learning concepts.",
         "url": "https://livy456.github.io/RAICA-RL-Computational-Tool/"
     },
     {
         "title": "Data Activism",
-        "year": 2022, 
+        "year": 2022,
         "image": "images/DataActivismChart.png",
         "description": "I curated a curriculum that integrated social justice and data science to encourage minoritized high school students to pursue a career in STEM.",
         "url": "https://deepnote.com/workspace/media-lab-7b3bfd3f-e5db-4409-9dbf-6ff83ea4c293/project/AnswerKeyCollege-Demographics-Analysis-f1f1cd8c-b2be-42aa-9543-82ee6a7fef32/notebook/notebook-1839a61f184144a5ad327fbeb7531e2c"
     },
     {
-        "title": "Suscipit laborum neque eligendi.",
-        "year":2022,
+        "title": "LLM-Powered Review Platform",
+        "year": 2026,
         "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Quia repellat sint enim quam esse labore perferendis saepe harum doloribus vero quasi veniam voluptatem consequatur, earum aut possimus natus minima recusandae ex! Dolorem itaque quidem aliquam eius iusto iste?",
+        "description": "At the MIT Media Lab Personal Robots Group, I shipped an end-to-end review platform that ingests thousands of video, code, and text submissions, transcribes audio with Whisper, and analyzes them with GPT-5.4 and Claude Opus. Low-confidence cases are escalated, automating about 75% of a manual review workflow. I benchmarked the system against 95 human-scored cases (Wilcoxon, ICC, and regression), fixed systematic underscoring of video, and published the evaluation in the AHFE International proceedings. It runs on AWS with FastAPI, PostgreSQL, Docker, and HTTPS/TLS, with FERPA-compliant data governance.",
         "url": ""
     },
     {
-        "title": "Hello World",
-        "year":2023,
+        "title": "Ornstein-Uhlenbeck Mean Reversion Model",
+        "year": 2025,
         "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Quia repellat sint enim quam esse labore perferendis saepe harum doloribus vero quasi veniam voluptatem consequatur, earum aut possimus natus minima recusandae ex! Dolorem itaque quidem aliquam eius iusto iste?",
+        "description": "At Nasdaq, I built an Ornstein-Uhlenbeck mean-reversion model with a 15-day lookback that predicts daily closes for 10 Nasdaq-listed companies. In a walk-forward test with no look-ahead bias, it reduced RMSE by 6% versus a rolling-mean baseline.",
         "url": ""
     },
     {
-        "title": "JavaScript",
-        "year":2024,
+        "title": "Nasdaq Listing Transition Analysis",
+        "year": 2025,
         "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Quia repellat sint enim quam esse labore perferendis saepe harum doloribus vero quasi veniam voluptatem consequatur, earum aut possimus natus minima recusandae ex! Dolorem itaque quidem aliquam eius iusto iste?",
+        "description": "Modeled NYSE-listed company performance after a Nasdaq transition (R² = 0.79), quantifying statistically significant liquidity gains that supported Nasdaq’s pitch for multi-billion-dollar listings from rival exchanges.",
         "url": ""
     },
     {
-        "title": "Python",
-        "year":2021,
+        "title": "SettleGuard",
+        "year": 2025,
         "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Quia repellat sint enim quam esse labore perferendis saepe harum doloribus vero quasi veniam voluptatem consequatur, earum aut possimus natus minima recusandae ex! Dolorem itaque quidem aliquam eius iusto iste?",
+        "description": "Built SettleGuard, a proof of concept to automate settlement oversight at Nasdaq. I engineered features from raw Parquet banking data and tuned a classifier to 70% recall, prioritizing failures on high-value transactions.",
         "url": ""
     },
     {
-        "title": "HTML",
-        "year":2021,
+        "title": "P&G Media Reach Models",
+        "year": 2024,
         "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Quia repellat sint enim quam esse labore perferendis saepe harum doloribus vero quasi veniam voluptatem consequatur, earum aut possimus natus minima recusandae ex! Dolorem itaque quidem aliquam eius iusto iste?",
+        "description": "At Procter & Gamble, I modeled drivers of media reach for Pampers, Always, Downy, and Oral-B using reach curves, regression, moving averages, and polynomial trend fitting on Meta and The Trade Desk data, quantifying the effects of frequency, cost, impressions, and targeting accuracy.",
         "url": ""
     },
     {
-        "title": "CSS",
-        "year":2023,
+        "title": "P&G Organic Search Rank Models",
+        "year": 2024,
         "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Quia repellat sint enim quam esse labore perferendis saepe harum doloribus vero quasi veniam voluptatem consequatur, earum aut possimus natus minima recusandae ex! Dolorem itaque quidem aliquam eius iusto iste?",
-        "url": ""
-    },
-    {
-        "title": "Tableau",
-        "year":2022,
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Quia repellat sint enim quam esse labore perferendis saepe harum doloribus vero quasi veniam voluptatem consequatur, earum aut possimus natus minima recusandae ex! Dolorem itaque quidem aliquam eius iusto iste?",
-        "url": ""
-    },
-    {
-        "title": "D3",
-        "year":2022,
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Quia repellat sint enim quam esse labore perferendis saepe harum doloribus vero quasi veniam voluptatem consequatur, earum aut possimus natus minima recusandae ex! Dolorem itaque quidem aliquam eius iusto iste?",
+        "description": "Modeled how sales, eContent, bid amounts, velocity, and search terms drive organic rank and share of search for P&G brands. Term placement had a larger effect than keyword inclusion.",
         "url": ""
     }
 ]

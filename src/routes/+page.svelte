@@ -38,7 +38,7 @@ dl.home_page_stats{
 <div class="home-page-container">
     
     <img class="portfolio-img" src="images/undergrad_headshot.jpg" alt="This is me!" width="250px" height="350px"> 
-    <p class="biography">I am an MEng at MIT, studying Artificial Intelligence and Decision Making.</p>
+    <p class="biography">I am a full stack software engineer at MIT Media Lab, building an agentic automatic grading platform.</p>
 </div>
 
 <!-- Adds github information to home page -->

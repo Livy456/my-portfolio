@@ -13,6 +13,7 @@ let selectedYear;
 let query = "";
 let filterProjects;
 let filteredYear;
+let visibleProjects;
 
 $: filterProjects = projects.filter( (project) => {
     
@@ -38,12 +39,16 @@ $:{
     });
 }
 
-// filter function iterates through each element in array
+// The pie sorts wedges by year, so the selected index has to use that same order.
 $: filteredYear = filterProjects.filter( (project) => {
-    
-    selectedYear =  selectedYearIndex > -1 ? pieData[selectedYearIndex].label : null;
-    return project.year === selectedYear; 
+    let years = d3.sort(pieData, (d) => d.label);
+    selectedYear = selectedYearIndex > -1 ? years[selectedYearIndex]?.label : null;
+    return project.year === selectedYear;
 });
+
+$: visibleProjects = (filteredYear.length > 0 ? filteredYear : filterProjects)
+    .slice()
+    .sort((a, b) => b.year - a.year);
 
 </script>
 
@@ -72,16 +77,7 @@ input.search-bar{
     />
 
     <div class="projects">
-
-        {#if filteredYear}
-            {#each filteredYear as p}
+        {#each visibleProjects as p (p.title)}
             <Project info={p}/>
-            {/each}
-        {/if}
-
-        {#if filteredYear.length === 0}
-            {#each filterProjects as p}
-                <Project info={p}/>
-            {/each}
-        {/if}
+        {/each}
     </div>

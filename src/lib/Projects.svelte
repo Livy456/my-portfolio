@@ -18,11 +18,13 @@
     
     <svelte:element this={"h" + hLevel} > {p.title}</svelte:element>
 
-    <img src={p.image}>
+    <img src={p.image} alt={p.title}>
     <dl class="project_description">
         <time style="color: gray">c. {p.year}</time>
-        <p>{p.description}</p> 
-        <a style="color:steelblue " class="project_url" href={p.url} target="_blank">Link to the Project</a>
+        <p>{p.description}</p>
+        {#if p.url}
+            <a style="color:steelblue " class="project_url" href={p.url} target="_blank" rel="noreferrer">Link to the Project</a>
+        {/if}
     </dl>
 </article>
 
