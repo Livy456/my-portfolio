@@ -3,48 +3,91 @@
 </svelte:head>
 
 <h1 class="resumeHeading">Resume</h1>
-    <div class="resume">
-        
-        <section class="Education">
-            <h3>EDUCATION</h3>
-            <p><strong>Massachusetts Institute of Technology (MIT)</strong>, 
-                B.S. in Artificial Intelligence and Decision Making, GPA 4.3 out of 5.0 <br><time>09.2021 - 05.2025</time></p>
-            
-        
-        </section>
-        <section class="Relevant_Experience">
-            <h3>RELEVANT EXPEREINCE</h3>
-            <p><strong>Procter & Gamble (P&G)</strong>, <em>Market Analysis and Insight</em>, Cincinnati, OH <br><time>Summer 2024</time></p>
-            <li>Incoming Market Analysis and Insight intern summer 2024</li>
+<p class="contact">
+    <a href="mailto:omdias77@mit.edu">omdias77@mit.edu</a>
+    · <a href="tel:508-208-4413">508-208-4413</a>
+    · <a href="https://github.com/Livy456" target="_blank" rel="noreferrer">GitHub</a>
+    · <a href="https://www.linkedin.com/in/olivia-dias/" target="_blank" rel="noreferrer">LinkedIn</a>
+</p>
 
-            <p><strong>MIT STEP Lab</strong>, <em>Undergraduate Researcher</em>, Cambridge, MA <br><time>06.2023 - present</time></p>
-            <li>Building a website that will serve as a computational tool that teaches Reinforcement Learning to students via a self-driving car game; Creating agile user stories to explain the software features of the computational tool</li>
-            
-            <p><strong>MIT Media Lab</strong>, <em>Undergraduate Researcher</em>, Cambridge, MA <br><time>06.2022 - 05.2023</time></p> 
-            <li>Collaborated with two undergraduates and a graduate student to curate a curriculum that integrated social justice and data science to encourage minoritized high school students to pursue a career in STEM.</li>
-            <li>Created an activity for the curriculum that analyzed aggregated data on undergraduate enrollment demographics to visualize the shortcomings of affirmative action</li>
-            <li>Taught programming basics and syntax including Python core, pandas, AI concepts, data analysis and visualization, as well as  social justice concepts to 30+ high school students over the course of two iterations of the program</li>
-            <li>Wrote and presented a research paper that highlighted the benefits and significance of teaching computer science in conjunction with historical context at the EAAI conference and the SIGCSE Technical Symposium conference.</li>
+<div class="resume">
+    <section class="Education">
+        <h3>EDUCATION</h3>
+        <p><strong>Massachusetts Institute of Technology (MIT) Media Lab</strong>,
+            MEng in Computer Science and Artificial Intelligence, Cambridge, MA
+            <br><time>Graduated May 2026</time></p>
+        <p><strong>Massachusetts Institute of Technology (MIT)</strong>,
+            B.S. in Computer Science and Artificial Intelligence, Cambridge, MA
+            <br><time>Graduated May 2025</time></p>
+        <p><strong>WallStreetQuants</strong>, Online Course
+            <br><time>August 2026 – present</time></p>
+    </section>
 
-            <p><strong>Elemental Cognition</strong>, <em>Software Tester Micro-internship</em>, Remote <br><time>01.2023</time></p> 
-            <li>Tested the functionality of Elemental Cognition’s new programming language to create AI models and reported conceptual errors and suggestions daily to help improve language reliability and make it more user friendly.</li>
-            <li>Utilized Elemental Cognition’s programming language to develop an AI model that improved scheduling multiple sporting events to reduce conflicts for athletes</li>
-            
-        </section>
-        <section class="Academic_Projects">
-            <h3>ACADEMIC PROJECTS</h3>
-            <p><strong>Lisp Interpreter</strong> <br><time>12.2022</time></p>
-            <li>Created a Python program that read, parsed, and evaluated numerical expression, boolean expressions, functions, conditional statements, and linked lists written in Lisp using lambda function, classes, and recursion</li>
-            
-        </section>
-        <section class="Community_Leadership">
-            <h3>COMMUNITY LEADERSHIP</h3>
-            <p><strong>Community Service Organizer</strong>, <em>MIT Baptist Student Fellowship (BSF)</em>, Cambridge, MA <br><time>09.2022-11.2022</time></p>
-            <li>Led a team of five people to complete two fundraisers for Operation Christmas Child (OCC) raising over $1700 to buy and pack over 100 presents for children in need all over the world</li>
-            
-            <h3>MIT Campus Involvement</h3>
-            <p><strong>Community Service Organizer</strong>, <em>Baptist Church of All Nations</em>, Taunton, MA <br><time>Summers 2020, 2021, 2023</time></p>
-            <li>Developed, organized, and led a school supplies distribution event with a local church and in conjunction with the local police department; distributed 200 backpacks to over 70 families with children in need</li>
-        </section>
-        
-    </div>
+    <section class="Technical_Skills">
+        <h3>TECHNICAL SKILLS</h3>
+        <p><strong>AI &amp; LLMs:</strong> LLM APIs (OpenAI GPT-5.4, Anthropic Claude Opus), RAG, agentic workflows, prompt orchestration, Whisper, LLM evaluation</p>
+        <p><strong>Engineering &amp; Data:</strong> Python (pandas, NumPy), SQL, TypeScript, FastAPI, REST APIs, PostgreSQL, data pipelines, React</p>
+        <p><strong>Production &amp; Security:</strong> AWS, Docker, CI/CD (GitHub Actions), integration testing, HTTPS/TLS, Linux, data governance (FERPA)</p>
+        <p><strong>Finance &amp; Analytics:</strong> Time series modeling, Ornstein-Uhlenbeck, regression, statistical testing, settlement risk</p>
+    </section>
+
+    <section class="Relevant_Experience">
+        <h3>RESEARCH &amp; PROFESSIONAL EXPERIENCE</h3>
+        <p><strong>MIT Media Lab, Personal Robots Group</strong>, <em>Full Stack Software Developer I</em>, Cambridge, MA
+            <br><time>July 2026 – Present</time></p>
+        <ul>
+            <li>Communicated with business stakeholders, researchers, and an executive as Technology Strategy Lead, running weekly sessions with a 6 person team to surface the highest value problems, coordinate user testing and adoption, and report to leadership.</li>
+            <li>Built and shipped an LLM-powered review platform end to end, from data pipeline to user facing website, that ingests thousands of video, code, and text submissions, transcribes audio with Whisper, analyzes them with GPT-5.4 and Claude Opus, and escalates low-confidence cases, automating ~75% of a manual review workflow.</li>
+            <li>Measured impact before scaling by benchmarking AI output against 95 human-scored cases (Wilcoxon, ICC, regression); caught systematic underscoring of video, fixed the routing logic, and published the evaluation at AHFE International proceedings.</li>
+            <li>Made the system production-grade and compliant: deployed on AWS (FastAPI, PostgreSQL, Docker, HTTPS/TLS) with single-command releases, and designing FERPA-compliant data governance and partner data sharing agreements.</li>
+        </ul>
+
+        <p><strong>Nasdaq</strong>, <em>Data Scientist and Deep Learning Engineer</em>, Boston, MA
+            <br><time>June 2025 – Aug 2025</time></p>
+        <ul>
+            <li>Built an Ornstein-Uhlenbeck mean reversion model (15 day lookback) predicting daily closes for 10 Nasdaq-listed companies, reducing RMSE by 6% vs. a rolling mean baseline in a walk forward test with no look ahead bias.</li>
+            <li>Modeled NYSE-listed company performance after a Nasdaq transition (R² = 0.79), quantifying statistically significant liquidity gains and translating them into insights that supported Nasdaq’s pitch for multi-billion dollar listings from rival exchanges.</li>
+        </ul>
+
+        <p><strong>Nasdaq</strong>, <em>Machine Learning Engineer</em>, Boston, MA
+            <br><time>Jan 2025</time></p>
+        <ul>
+            <li>Built “SettleGuard,” a proof of concept to automate settlement oversight, engineering features from raw Parquet banking data and tuning a classifier to 70% recall, deliberately prioritizing catching failures on high value transactions.</li>
+        </ul>
+
+        <p><strong>Procter &amp; Gamble (P&amp;G)</strong>, <em>Consumer Market Knowledge Business Analyst / Data Scientist</em>, Cincinnati, OH
+            <br><time>June 2024 – Aug 2024</time></p>
+        <ul>
+            <li>Modeled drivers of media reach for Pampers, Always, Downy, and Oral-B using reach curves, regression, moving averages, and polynomial trend fitting on Meta and The Trade Desk data, quantifying the effects of frequency, cost, impressions, and targeting accuracy.</li>
+            <li>Modeled how sales, eContent, bid amounts, velocity, and search terms drive organic rank and share of search, challenging the assumption that keyword inclusion mattered most: term placement had the larger effect.</li>
+        </ul>
+    </section>
+
+    <section class="Community_Leadership">
+        <h3>MIT LEADERSHIP &amp; ACTIVITIES</h3>
+        <ul>
+            <li>Captained MIT Track and Field (120 athletes) to DIII indoor and outdoor national titles; 3x All-American.</li>
+            <li>Served as NSBE Membership Chair and Athletes In Action Group Leader.</li>
+        </ul>
+    </section>
+</div>
+
+<style>
+    .contact {
+        margin: -0.35rem 0 1.25rem;
+        text-align: center;
+    }
+
+    .contact a {
+        color: var(--accent-strong, steelblue);
+    }
+
+    .resume ul {
+        margin: 0.15rem 0 0.9rem;
+        padding-left: 1.35rem;
+    }
+
+    .resume li {
+        margin: 0.35rem 0;
+    }
+</style>
