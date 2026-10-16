@@ -105,7 +105,7 @@ dl.home_page_stats {
 
 {/await}
 
-<h2>Latest Projects</h2>
+<h2>Highlighted Projects</h2>
 <div class="projects">
     {#each projects.slice(0, 3) as p}
         <Project info={p} hLevel=3/>
