@@ -53,11 +53,12 @@ $: visibleProjects = (filteredYear.length > 0 ? filteredYear : filterProjects)
 </script>
 
 <style>
-input.search-bar{
-    /* background-color: rgb(255, 255, 255); */
-    font-size: 30px;
-    width: 1240px;
-    height: 50px;
+input.search-bar {
+    display: block;
+    width: min(100%, 36rem);
+    height: auto;
+    margin: 0.25rem auto 1.25rem;
+    font-size: 1rem;
 }
 
 </style>

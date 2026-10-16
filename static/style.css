@@ -1,217 +1,246 @@
 :root {
-    background-color: color-mix(in oklch, var(--color-accent), canvas 85%);
-    color-scheme: dark;
-}   
-
-.color-scheme{
-    margin-top: 0px;
-    padding:0px;
-    color:rgb(76, 148, 148);
-    font-style: bold;
+    --accent: rgb(68, 181, 209);
+    --accent-strong: light-dark(rgb(18, 104, 128), rgb(148, 220, 234));
+    --ink: light-dark(#1c2830, #e7eef2);
+    --muted: light-dark(#5c6d78, #a9bac4);
+    --surface: light-dark(#ffffff, #1a242c);
+    --surface-2: light-dark(#f3f8fa, #243038);
+    --line: light-dark(rgb(68 181 209 / 35%), rgb(148 220 234 / 28%));
+    --shadow: 0 1px 2px rgb(16 42 54 / 6%), 0 10px 28px rgb(16 42 54 / 8%);
+    background-color: light-dark(#f4f8f9, #12181c);
+    color: var(--ink);
 }
 
-body { 
-    /* Set line height to 1.5 times the font size
-       and use the 0S's UI font as the website font */
-    font: 100%/1.5 system-ui;
+body {
+    font: 100%/1.6 system-ui, sans-serif;
+    max-width: 72rem;
     margin-inline: auto;
-    padding-left: 2ch; 
-    padding-right: 2ch;
-    color-scheme: dark;
-    border-bottom-color: oklch(50% 10% 200 / 40%);
+    padding: 1.25rem 1.5rem 3rem;
+    color: var(--ink);
+    background-color: transparent;
 }
 
-h1{
-    /* font-style: italic; */
-    font-size: 50px;
-    font-family: garamond;
-    margin: 0px;
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+h1 {
+    font-family: Garamond, Palatino, Georgia, serif;
+    font-size: clamp(2.15rem, 5vw, 3.15rem);
+    font-weight: 500;
+    line-height: 1.15;
+    margin: 0.25rem 0 1.4rem;
+    padding-bottom: 0.35rem;
     text-align: center;
-    background-color: rgb(68, 181, 209);
+    border-bottom: 3px solid var(--accent);
 }
 
-.projects{
-display: grid;
-grid-template-columns: repeat(auto-fill, minmax(25em, 1fr));
+h2 {
+    margin: 1.5rem 0 0.75rem;
+    font-family: Garamond, Palatino, Georgia, serif;
+    font-size: 1.75rem;
+    font-weight: 500;
 }
 
-article{
+.projects {
     display: grid;
-    grid-template-rows: subgrid;
-    grid-row: span 3;
-    padding-right: 5px;
-    padding-left: 5px;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
+    gap: 1.25rem;
+    align-items: stretch;
 }
 
-time{
-    font-family: Baskerville;
-}
-
-nav{
+article {
     display: flex;
-    padding-left: 0.5%;
-    padding-right: 0px;
-    margin-bottom: 1px;
-    --border-color: oklch(50% 10% 200 / 40%);
-    /* color: blue; */
-    border-bottom-color: var(--border-color);
+    flex-direction: column;
+    gap: 0.75rem;
+    height: 100%;
+    padding: 1rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
 }
 
-h2{
-    margin: 0;
-    font-style: garamond;
+article img {
+    width: 100%;
+    height: 11rem;
+    object-fit: contain;
+    border-radius: 8px;
+    background: var(--surface-2);
 }
 
-.resume{
-    display: grid;
-    grid-template-columns: auto 1fr;
+time {
+    font-style: oblique;
+    font-family: Palatino, Georgia, "Times New Roman", serif;
 }
 
-.resume h3{
-    margin-bottom:0px;
-    font-size: larger;
-    background-color: rgb(68, 143, 255);   
-    font-family: garamond; 
+nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin: 0 0 1.25rem;
+    padding: 0.3rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--surface);
 }
 
-section.github_stats{
-    display: grid;
-    grid-template-columns: subgrid;
-    grid-column: span 1 / -1;
-    border-bottom-color: rgb(230, 227, 227);
-    border-bottom-style: solid;
-    border-bottom-width: 2px;
-    /* margin: 5px; */
-    padding: 5px;
-}
-
-a.current{
-    padding-bottom: 0.1em;
-    border-bottom-color:rgb(139, 212, 255);
-    border-bottom-width: 0.3em;
-    font-weight: bold;
-}
-
-
-
-
-.navigation_bar{
-    flex: 1;
+a.navigation_bar {
+    flex: 1 1 auto;
+    padding: 0.45rem 0.7rem;
+    border-radius: 999px;
     text-decoration: none;
     text-align: center;
-    /* padding: 0.5rem; */
-    border-bottom-width: 2px;
-    border-bottom-style: solid;
-    border-bottom-color: rgb(60, 168, 240);
-    font-size: 20px;
-    color: rgb(82, 82, 203);
-
-    a:hover{
-        border-bottom-color: rgb(3, 87, 205);
-        border-bottom-width: 0.3em;
-        padding-bottom: 0.1em;
-        background-color: rgb(212, 251, 255);
-        font-weight: bold;
-    }
-    
+    font-size: 0.95rem;
+    color: var(--accent-strong);
 }
 
-.home-page-container{
+a.navigation_bar:hover,
+a.navigation_bar:focus-visible {
+    background: color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+a.current {
+    background: var(--accent);
+    color: #07303a;
+    font-weight: 600;
+}
+
+.resume {
+    display: grid;
+    gap: 1.35rem;
+    max-width: 68rem;
+    margin-inline: auto;
+}
+
+.resume h3 {
+    margin: 0 0 0.4rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 8px;
+    background: var(--accent);
+    color: #07303a;
+    font-family: Garamond, Palatino, Georgia, serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+.resume p,
+.Education p,
+.Relevant_Experience p,
+.Academic_Projects p,
+.Community_Leadership p {
+    margin: 0.3rem 0;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    background: var(--surface-2);
+    color: inherit;
+}
+
+.resume li {
+    margin: 0.35rem 0 0.35rem 1.25rem;
+}
+
+section.github_stats {
+    margin: 1.5rem 0 0.5rem;
+    padding: 0.25rem 0 1.25rem;
+    border-bottom: 1px solid var(--line);
+}
+
+.home-page-container {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
+    gap: 1.75rem 2.5rem;
+    max-width: 52rem;
+    margin: 1.25rem auto 0.5rem;
 }
 
-.portfolio-img{
-    padding:15px;
-    margin:10px;
-    max-height: 100%;
+.portfolio-img {
+    width: min(250px, 100%);
+    height: auto;
+    margin: 0;
+    padding: 0;
+    border-radius: 14px;
+    object-fit: cover;
+    box-shadow: var(--shadow);
+}
+
+img {
     max-width: 100%;
 }
 
-img{
-    max-width: 100%;
-    /* align-items: center; */
-    max-height: 250px;
-    /* border: 5px solid rgb(181, 235, 231); */
-    /* padding:15px; */
-    /* margin:10px */
+.biography {
+    flex: 1 1 16rem;
+    width: auto;
+    max-width: 28rem;
+    margin: 0;
+    padding: 0;
+    font-family: Palatino, Georgia, serif;
+    font-size: clamp(1.25rem, 2.4vw, 1.7rem);
+    line-height: 1.45;
 }
 
-img:hover{
-    filter: opacity(75%);
+.biography a {
+    color: var(--accent-strong);
 }
 
-form{
+form {
     display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 1em;
+    grid-template-columns: 1fr;
+    gap: 0.85rem 1rem;
+    max-width: 40rem;
+    margin: 1rem auto 0;
 }
 
-time{
-    font-style: oblique;
-    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+@media (min-width: 40rem) {
+    form {
+        grid-template-columns: minmax(8rem, auto) 1fr;
+    }
 }
 
-.biography{
-    font:inherit;
-    display: block;
-    font-family: Cambria;
-    font-size: 30px;
-    width: 300px;
-    word-wrap: break-word;
-    padding-left: 50px;
-    
-}
-
-input{
-    font:inherit;
-}
-
-textarea{
-    font:inherit;
-    display: block;
-}
-
-label{
+form label {
     display: grid;
     grid-template-columns: subgrid;
     grid-column: 1 / -1;
-    margin-top: 5px;
-    padding:15px;
+    align-items: center;
+    margin: 0;
+    padding: 0;
 }
-button{
+
+input,
+textarea,
+select {
+    font: inherit;
+    color: inherit;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 0.5rem 0.7rem;
+}
+
+textarea {
+    display: block;
+    min-height: 8rem;
+    resize: vertical;
+}
+
+button {
+    justify-self: start;
     grid-column: 1 / -1;
-    height: 30px;
+    height: auto;
+    margin-top: 0.25rem;
+    padding: 0.5rem 1.15rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #07303a;
+    font-weight: 600;
+    cursor: pointer;
 }
 
-.Education p{
-    padding-top: 0px;
-    padding-left: 1ch;
-    background-color: rgb(120, 196, 217);
-    color: black;
-    margin-bottom: 1px;
-}
-
-.Relevant_Experience p{
-    padding-top: 0px;
-    padding-left: 1ch;
-    background-color: rgb(149, 227, 249);
-    margin:0px;
-    color: black;
-}
-
-.Academic_Projects p {
-    padding-top: 0px;
-    padding-left: 1ch;
-    background-color: rgb(149, 227, 249);
-    margin:0px; 
-    color: black;   
-} 
-
-.Community_Leadership p{
-    padding-left: 1ch;
-    background-color: rgb(149, 227, 249);
-    margin:0px; 
-    color: black;
+button:hover,
+button:focus-visible {
+    filter: brightness(0.95);
 }

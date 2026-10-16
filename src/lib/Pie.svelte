@@ -166,9 +166,11 @@
 
     .container{
         align-items: center;
-        flex: 1;
+        justify-content: center;
+        flex-wrap: wrap;
         display: flex;
-        gap: 6ch;
+        gap: 2rem 4rem;
+        margin: 0.5rem 0 1rem;
     }
 
     span.swatch{
@@ -181,20 +183,16 @@
     }
 
     ul.legend{
-        /* display: grid; */
-        grid-template-columns: repeat(auto-fill, minmax(9em, 1fr));
-        border-color: rgb(193, 193, 193);
-        border-width: 3px;
-        border-style: solid;
-        padding-left: 30px;
-        padding-right: 30px;
-        padding-top: 10px;
-        padding-bottom: 10px;
+        margin: 0;
+        border: 1px solid var(--line, rgb(193, 193, 193));
+        border-radius: 12px;
+        background: var(--surface, transparent);
+        padding: 0.75rem 1.25rem;
     }
 
     li{
-        font-palette: black;
         list-style: none;
+        margin: 0.2rem 0;
     }
 
     .selected {

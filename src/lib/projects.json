@@ -32,7 +32,7 @@
         "year": 2026,
         "image": "https://vis-society.github.io/labs/2/images/empty.svg",
         "description": "At the MIT Media Lab Personal Robots Group, I shipped an end-to-end review platform that ingests thousands of video, code, and text submissions, transcribes audio with Whisper, and analyzes them with GPT-5.4 and Claude Opus. Low-confidence cases are escalated, automating about 75% of a manual review workflow. I benchmarked the system against 95 human-scored cases (Wilcoxon, ICC, and regression), fixed systematic underscoring of video, and published the evaluation in the AHFE International proceedings. It runs on AWS with FastAPI, PostgreSQL, Docker, and HTTPS/TLS, with FERPA-compliant data governance.",
-        "url": ""
+        "url": "http://autograder.media.mit.edu/"
     },
     {
         "title": "Ornstein-Uhlenbeck Mean Reversion Model",

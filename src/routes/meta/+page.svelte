@@ -77,21 +77,30 @@
 
     dl.stats{
         display: grid;
-        grid-template-columns: auto;
-        grid-template-rows: auto;
-        font-family: 'Segoe UI';
-        padding-top: 0px;
-        margin-top: 0px;
+        grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+        gap: 0.75rem 1rem;
+        margin: 0 0 1.5rem;
+        padding: 1rem;
+        border: 1px solid var(--line, transparent);
+        border-radius: 14px;
+        background: var(--surface, transparent);
+
+        dt, dd {
+            min-width: 0;
+            overflow-wrap: anywhere;
+        }
 
         dt{
             grid-row: 1;
-            font-size: 20px;
-            color: grey;
+            font-size: 0.75rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--muted, grey);
         }
 
         dd{
             grid-row: 2;
-            font-size: 35px;
+            font-size: clamp(1.35rem, 3vw, 2rem);
             text-align: left;
             padding: 0px;
             margin: 0px;

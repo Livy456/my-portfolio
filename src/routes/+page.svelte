@@ -17,19 +17,42 @@
 </script>
 
 <style>
-
-dl.home_page_stats{
+dl.home_page_stats {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem 1rem;
+    margin: 0.5rem 0 0;
 
-    dt{
-        grid-row: 1;
-        font-size: 20px;
+    dt, dd {
+        min-width: 0;
     }
 
-    dd{
-        grid-row: 2;
-        font-size: 50px;
+    dt {
+        font-size: 0.75rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--muted, gray);
+    }
+
+    dd {
+        margin: 0 0 0.35rem;
+        font-size: clamp(1.5rem, 4vw, 2.4rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+
+@media (min-width: 40rem) {
+    dl.home_page_stats {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+
+        dt {
+            grid-row: 1;
+        }
+
+        dd {
+            grid-row: 2;
+            margin: 0;
+        }
     }
 }
 </style>
@@ -38,7 +61,7 @@ dl.home_page_stats{
 <div class="home-page-container">
     
     <img class="portfolio-img" src="images/undergrad_headshot.jpg" alt="This is me!" width="250px" height="350px"> 
-    <p class="biography">I am a full stack software engineer at MIT Media Lab, building an agentic automatic grading platform.</p>
+    <p class="biography">I am a full stack software engineer at MIT Media Lab, building an <a href="http://autograder.media.mit.edu/" target="_blank" rel="noreferrer">agentic automatic grading platform</a>.</p>
 </div>
 
 <!-- Adds github information to home page -->
@@ -51,7 +74,7 @@ dl.home_page_stats{
     {:then data} 
         <section class="github_stats">
             <!-- <p>The data is { JSON.stringify(data) }</p> -->
-            <h2 style="font-family: garamond; font-size:30px;">My GitHub Stats</h2>
+            <h2>My GitHub Stats</h2>
             <dl class="home_page_stats">
                 <dt>Followers:</dt>
                 <dd>{data.followers}</dd>

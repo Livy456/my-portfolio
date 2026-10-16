@@ -28,8 +28,10 @@ div{
     grid-column: 1 / -1;
     display: grid;
     grid-template-columns: 3fr 10fr;
-    background: hsl(0 0% 100% / 90%);
-    box-shadow: 0 0 .2em .2em hsl(0 0% 100% / 90%);
+    background: var(--surface, hsl(0 0% 100% / 90%));
+    border: 1px solid var(--line, transparent);
+    border-radius: 12px;
+    box-shadow: var(--shadow, 0 0 .2em .2em hsl(0 0% 100% / 90%));
 
     dd{
         grid-column: 2;
@@ -51,7 +53,9 @@ div{
     width: .5em;
     aspect-ratio: 1;
     background-color: var(--color);
+    border: 0;
     border-radius: 50%;
+    box-shadow: none;
 }
 
 small{

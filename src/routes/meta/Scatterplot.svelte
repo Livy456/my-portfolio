@@ -136,7 +136,10 @@
     }
 
     svg{
-        margin:50px;
+        display: block;
+        width: 100%;
+        height: auto;
+        margin: 1rem 0;
     }
 
     dl.info
